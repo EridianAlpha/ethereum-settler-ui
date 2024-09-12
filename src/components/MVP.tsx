@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { VStack, Text, Box, Code, Image } from "@chakra-ui/react"
-import { set } from "lodash"
+import { VStack, Text, Box, Code } from "@chakra-ui/react"
 
 export default function MVP() {
-    const [tokenData, setTokenData] = useState<any>(null)
-    const [svgContent, setSvgContent] = useState<string>("")
+    const [tokenData, setTokenData] = useState(null)
+    const [svgContent, setSvgContent] = useState("")
 
     useEffect(() => {
         const fetchTokenURI = async () => {
             // Define the provider and contract details
             const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545")
-            const contractAddress = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
+            const contractAddress = "0xc5a5C42992dECbae36851359345FE25997F5C42d"
 
             // Contract ABI with only the tokenURI function
             const abi = ["function tokenURI(uint256 tokenId) view returns (string)"]
@@ -58,16 +57,16 @@ export default function MVP() {
     }, [])
 
     return (
-        <VStack maxW={"80%"} alignItems={"center"} pb={5} px={3} gap={1}>
+        <VStack maxW={"90%"} alignItems={"center"} pb={5} px={3} gap={0}>
             {tokenData ? (
-                <VStack maxW={"100%"}>
+                <VStack maxW={"100%"} gap={0}>
+                    <Box w={"100%"} maxW={"400px"} maxH={"500px"} borderRadius="20px" overflow={"hidden"}>
+                        {svgContent && <embed src={svgContent} />}
+                    </Box>
                     <Box maxW={"100%"} overflow={"scroll"} borderRadius={20}>
                         <Code p={5} borderRadius={20}>
                             <pre>{JSON.stringify(tokenData, null, 2)}</pre>
                         </Code>
-                    </Box>
-                    <Box mt={5} boxSize={"300px"} borderRadius="20px" overflow={"hidden"}>
-                        {svgContent && <embed src={svgContent} />}
                     </Box>
                 </VStack>
             ) : (
