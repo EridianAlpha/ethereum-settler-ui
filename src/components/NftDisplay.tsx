@@ -6,7 +6,7 @@ import NextLink from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
-export default function MVP() {
+export default function NftDisplay() {
     const [tokenData, setTokenData] = useState(null)
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
