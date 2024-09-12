@@ -109,8 +109,7 @@ export default function MVP() {
                         onClick={() => setIsViewNftMetadataExpanded(!isViewNftMetadataExpanded)}
                         className={"bgContent"}
                         gap={5}
-                        pt={3}
-                        pb={isViewNftMetadataExpanded ? 1 : 3}
+                        py={3}
                     >
                         <Box
                             boxSize={6}
@@ -132,35 +131,38 @@ export default function MVP() {
                     </HStack>
                 </VStack>
                 {isViewNftMetadataExpanded && (
-                    <VStack
-                        gap={5}
-                        pt={3}
-                        pb={6}
-                        px={8}
-                        maxW={"100%"}
-                        borderBottomRadius={{ base: 20, md: 70, xl: 80 }}
-                        borderTopRadius={{ sm: 0, md: 70, lg: 150, xl: 200 }}
-                        alignItems={"center"}
-                        className={"bgContent"}
-                    >
-                        <NftMetadata label="Name" content={tokenData.name} />
-                        <NftMetadata label="Description" content={tokenData.description} />
-                        <NftMetadata
-                            label="Mint Timestamp"
-                            content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
-                        />
-                        <NftMetadata label="Current Owner" content="0x000..." />
-                        <NftMetadata
-                            label="Background Image"
-                            content={tokenData.image}
-                            link={tokenData.image.replace(/ipfs:\/\//g, "https://ipfs.io/ipfs/")}
-                        />
-                        <NftMetadata
-                            label="Composite SVG Image"
-                            content={svgContent}
-                            link={svgContent}
-                            downloadName={`${tokenData.name} ${getFormattedDate()}.svg`}
-                        />
+                    <VStack gap={0}>
+                        <VStack gap={5} pt={3} px={8} maxW={"500px"} alignItems={"center"} className={"bgContent"}>
+                            <NftMetadata label="Name" content={tokenData.name} />
+                            <NftMetadata label="Description" content={tokenData.description} />
+                            <NftMetadata
+                                label="Mint Timestamp"
+                                content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
+                            />
+                            <NftMetadata label="Current Owner" content="0x000..." />
+                            <NftMetadata
+                                label="Background Image"
+                                content={tokenData.image}
+                                link={tokenData.image.replace(/ipfs:\/\//g, "https://ipfs.io/ipfs/")}
+                            />
+                        </VStack>
+                        <VStack
+                            gap={5}
+                            py={8}
+                            px={8}
+                            maxW={"100%"}
+                            borderBottomRadius={{ base: 20, md: 40, xl: 50 }}
+                            borderTopRadius={{ sm: 0, md: 30, lg: 40, xl: 50 }}
+                            alignItems={"center"}
+                            className={"bgContent"}
+                        >
+                            <NftMetadata
+                                label="Composite SVG Image"
+                                content={svgContent}
+                                link={svgContent}
+                                downloadName={`${tokenData.name} ${getFormattedDate()}.svg`}
+                            />
+                        </VStack>
                     </VStack>
                 )}
             </VStack>
