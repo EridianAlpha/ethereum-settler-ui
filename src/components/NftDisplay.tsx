@@ -38,10 +38,10 @@ export default function NftDisplay() {
     }
 
     useEffect(() => {
-        const fetchTokenURI = async () => {
+        const fetchNftUri = async () => {
             // Define the provider and contract details
             const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545")
-            const contractAddress = "0xc5a5C42992dECbae36851359345FE25997F5C42d"
+            const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 
             // Contract ABI with only the tokenURI function
             const abi = ["function tokenURI(uint256 tokenId) view returns (string)"]
@@ -84,7 +84,7 @@ export default function NftDisplay() {
             }
         }
 
-        fetchTokenURI()
+        fetchNftUri()
     }, [])
 
     if (tokenData)
