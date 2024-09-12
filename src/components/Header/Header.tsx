@@ -104,7 +104,9 @@ export default function Header({}) {
                     <HStack h={16} alignItems={"center"} justifyContent={"space-between"}>
                         <HStack spacing={3} alignItems={"center"} cursor={"pointer"} onClick={navigateHome}>
                             {/* <Image maxW={10} objectFit={"cover"} src={"./images/EthLogo.svg"} alt={"Project Logo"} /> */}
-                            <Text fontSize={"4xl"}>🏕️</Text>
+                            <Text mt={"-10px"} fontSize={"5xl"}>
+                                🏕️
+                            </Text>
                             <Box pr={2} minW={"fit-content"} fontWeight="extrabold" fontSize="xl" whiteSpace="nowrap" overflow="hidden">
                                 Ethereum Settler
                             </Box>
