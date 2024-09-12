@@ -16,6 +16,12 @@ const customTheme = extendTheme({
             ".bgPage": {
                 bg: props.colorMode === "dark" ? "pageBackground.dark" : "pageBackground.light",
             },
+            ".bgContent": {
+                bg:
+                    props.colorMode === "dark"
+                        ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                        : darkenColor(props.theme.colors.pageBackground.light, 0.05),
+            },
             ".tooltip": {
                 bg:
                     props.colorMode === "dark"
