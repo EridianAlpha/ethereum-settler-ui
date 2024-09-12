@@ -20,6 +20,23 @@ export default function MVP() {
         return `${year}-${month}-${day}`
     }
 
+    const NftMetadata = ({ label, content, link = "", downloadName = "" }) => {
+        return (
+            <VStack gap={1} className="bgPage" borderRadius={15} px={3} py={1}>
+                <Text fontWeight={"bold"}>{label}</Text>
+                {link ? (
+                    <Text wordBreak="break-all" whiteSpace="normal" textAlign={"center"}>
+                        <Link as={NextLink} href={link} color={"blue"} target="_blank" download={downloadName} rel="noopener noreferrer">
+                            {content}
+                        </Link>
+                    </Text>
+                ) : (
+                    <Text textAlign={"center"}>{content}</Text>
+                )}
+            </VStack>
+        )
+    }
+
     useEffect(() => {
         const fetchTokenURI = async () => {
             // Define the provider and contract details
@@ -75,7 +92,7 @@ export default function MVP() {
             <VStack w={"100%"} maxW={"90%"} alignItems={"center"} pb={5} px={3} gap={0}>
                 <VStack
                     w={"100%"}
-                    maxW={"400px"}
+                    maxW={"500px"}
                     gap={0}
                     className={"bgContent"}
                     borderTopRadius={25}
@@ -122,57 +139,28 @@ export default function MVP() {
                         px={8}
                         maxW={"100%"}
                         borderBottomRadius={{ base: 20, md: 70, xl: 80 }}
-                        borderTopRadius={{ sm: 0, md: 120, lg: 220, xl: 270 }}
+                        borderTopRadius={{ sm: 0, md: 70, lg: 150, xl: 200 }}
                         alignItems={"center"}
                         className={"bgContent"}
                     >
-                        <VStack gap={0}>
-                            <Text fontWeight={"bold"}>Name</Text>
-                            <Text textAlign={"center"}>{tokenData.name}</Text>
-                        </VStack>
-                        <VStack gap={0}>
-                            <Text fontWeight={"bold"}>Description</Text>
-                            <Text textAlign={"center"}>{tokenData.description}</Text>
-                        </VStack>
-                        <VStack gap={0}>
-                            <Text fontWeight={"bold"}>Mint Timestamp</Text>
-                            <Text textAlign={"center"}>{tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}</Text>
-                        </VStack>
-                        <VStack gap={0}>
-                            <Text fontWeight={"bold"}>Current Owner</Text>
-                            <Text textAlign={"center"}>0x000...</Text>
-                        </VStack>
-                        <VStack gap={0}>
-                            <Text fontWeight={"bold"}>Background Image</Text>
-                            <Text wordBreak="break-all" whiteSpace="normal" textAlign={"center"}>
-                                <Link
-                                    as={NextLink}
-                                    href={tokenData.image.replace(/ipfs:\/\//g, "https://ipfs.io/ipfs/")}
-                                    color={"blue"}
-                                    target="_blank"
-                                >
-                                    {tokenData.image}
-                                </Link>
-                            </Text>
-                        </VStack>
-                        <VStack gap={0}>
-                            <Text fontWeight={"bold"}>Composite SVG Image</Text>
-                            <Text wordBreak="break-all" whiteSpace="normal" textAlign={"center"}>
-                                {/* <Link as={NextLink} href={svgContent} color={"blue"} target="_blank">
-                                    {svgContent}
-                                </Link> */}
-                                <Link
-                                    as="a"
-                                    href={svgContent}
-                                    color={"blue"}
-                                    download={`${tokenData.name} ${getFormattedDate()}.svg`} // This ensures it suggests a download, but the image may still load in a new tab
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    {svgContent}
-                                </Link>
-                            </Text>
-                        </VStack>
+                        <NftMetadata label="Name" content={tokenData.name} />
+                        <NftMetadata label="Description" content={tokenData.description} />
+                        <NftMetadata
+                            label="Mint Timestamp"
+                            content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
+                        />
+                        <NftMetadata label="Current Owner" content="0x000..." />
+                        <NftMetadata
+                            label="Background Image"
+                            content={tokenData.image}
+                            link={tokenData.image.replace(/ipfs:\/\//g, "https://ipfs.io/ipfs/")}
+                        />
+                        <NftMetadata
+                            label="Composite SVG Image"
+                            content={svgContent}
+                            link={svgContent}
+                            downloadName={`${tokenData.name} ${getFormattedDate()}.svg`}
+                        />
                     </VStack>
                 )}
             </VStack>
