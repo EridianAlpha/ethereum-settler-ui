@@ -4,6 +4,12 @@ This is the UI for the Ethereum Settler project. Built using Next.js and ChakraU
 
 ## Installation
 
+### Clone repository
+
+```bash
+git clone https://github.com/EridianAlpha/ethereum-settler-ui.git
+```
+
 ### Install Dependencies
 
 Install the dependencies using the following command:
