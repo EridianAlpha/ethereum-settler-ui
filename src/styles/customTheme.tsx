@@ -42,7 +42,10 @@ const customTheme = extendTheme({
     components: {
         Code: {
             baseStyle: (props: StyleFunctionProps) => ({
-                bg: props.colorMode === "dark" ? "pageBackgroundHover.dark" : "contentBackground.light",
+                bg:
+                    props.colorMode === "dark"
+                        ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                        : darkenColor(props.theme.colors.pageBackground.light, 0.05),
             }),
         },
         Drawer: {
@@ -60,18 +63,21 @@ const customTheme = extendTheme({
         Button: {
             variants: {
                 HeaderButton: (props: StyleFunctionProps) => ({
-                    bg: props.colorMode === "dark" ? lightenColor(props.theme.colors.pageBackground.dark, 0.1) : "contentBackground.light",
+                    bg:
+                        props.colorMode === "dark"
+                            ? lightenColor(props.theme.colors.pageBackground.dark, 0.1)
+                            : darkenColor(props.theme.colors.pageBackground.light, 0.05),
                     _hover: {
                         bg:
                             props.colorMode === "dark"
                                 ? lightenColor(props.theme.colors.pageBackground.dark, 0.2)
-                                : darkenColor(props.theme.colors.contentBackground.light, 0.15),
+                                : darkenColor(props.theme.colors.pageBackground.light, 0.15),
                     },
                     _active: {
                         bg:
                             props.colorMode === "dark"
                                 ? lightenColor(props.theme.colors.pageBackground.dark, 0.3)
-                                : darkenColor(props.theme.colors.contentBackground.light, 0.2),
+                                : darkenColor(props.theme.colors.pageBackground.light, 0.2),
                     },
                 }),
             },
@@ -80,31 +86,11 @@ const customTheme = extendTheme({
     colors: {
         pageBackground: {
             light: "#FFFFFF",
-            dark: "#0f0536",
-        },
-        pageBackgroundHover: {
-            light: "#EDF2F7",
-            dark: "#2a114c",
+            dark: "#031c11",
         },
         contentBackground: {
             light: "#EDF2F7",
-            dark: "#0e052c",
-        },
-        border: {
-            light: "#D3D3D3",
-            dark: "#54199b",
-        },
-        checklistBar: {
-            light: "#dfdfdf",
-            dark: "#0c081b",
-        },
-        tableBorder: {
-            light: "#EDF2F7",
-            dark: "rgb(255, 255, 255, 0.2)",
-        },
-        divider: {
-            light: "#dfdfdf",
-            dark: "rgb(255, 255, 255, 0.2)",
+            dark: "#053520",
         },
         gold: "#e7c60d",
         red: "#EC420C",
