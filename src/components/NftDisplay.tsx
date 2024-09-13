@@ -6,6 +6,7 @@ import NextLink from "next/link"
 import { useAccount } from "wagmi"
 
 import config from "../../public/data/config.json"
+import MintNftButton from "./MintNftButton"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
@@ -60,7 +61,6 @@ export default function NftDisplay({ customRpc, nftId, setNftId }) {
 
                 // Fetch the tokenURI for the connected wallet address
                 const nftId = await contract.getOwnerToId(connectedWalletAddress)
-                console.log("NFT ID:", nftId)
                 setNftId(nftId)
 
                 // If the nftId is 0, the connectedWalletAddress does not have an NFT, so return early
@@ -197,13 +197,11 @@ export default function NftDisplay({ customRpc, nftId, setNftId }) {
 
     // If the nftId is 0, display a message that no NFTs were found for the connected address
     if (nftId == 0) {
-        return (
-            <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={5}>
-                <Text>No NFTs found for this address. Let's mint one!</Text>
-            </VStack>
-        )
+        console.log("nftId:", nftId)
+        return <MintNftButton nftId={nftId} />
     }
 
     // If there is an error fetching the token data, display an error message
+    // TODO: There is another state before this where it is showing this error before the image loads
     return <Text>Error fetching NFT data</Text>
 }

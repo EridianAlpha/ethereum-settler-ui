@@ -120,6 +120,14 @@ const customTheme = extendTheme({
                     animation: `${rainbowAnimation} 20s linear infinite, ${scaleAnimation} 2s ease-in-out infinite`,
                     textShadow: props.colorMode === "dark" ? "0px 0px 5px black" : "0px",
                 }),
+                MintNftDisabledButton: (props: StyleFunctionProps) => ({
+                    backgroundImage: "linear-gradient(270deg, pink, purple, blue, red, blue, purple, pink)",
+                    backgroundSize: "1000% 1000%",
+                    textShadow: props.colorMode === "dark" ? "0px 0px 5px black" : "0px",
+                    cursor: "default",
+                    pointerEvents: "none",
+                    color: "white",
+                }),
                 WalletButton: (props: StyleFunctionProps) => ({
                     border: "3px solid",
                     borderColor: "orange",
@@ -157,13 +165,6 @@ const customTheme = extendTheme({
                             ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
                             : darkenColor(props.theme.colors.contentBackground.light, 0),
                     cursor: "default",
-                }),
-                MintNftDisabledButton: (props: StyleFunctionProps) => ({
-                    backgroundImage: "linear-gradient(270deg, pink, purple, blue, red, blue, purple, pink)",
-                    backgroundSize: "1000% 1000%",
-                    textShadow: props.colorMode === "dark" ? "0px 0px 5px black" : "0px",
-                    cursor: "default",
-                    pointerEvents: "none",
                 }),
             },
         },

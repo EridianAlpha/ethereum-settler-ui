@@ -4,6 +4,7 @@ import { VStack } from "@chakra-ui/react"
 import NftDisplay from "./NftDisplay"
 import TokenDisplay from "./TokenDisplay"
 import ConnectWalletButton from "./ConnectWalletButton"
+import MintNftButton from "./MintNftButton"
 import CurrentAddressInfo from "./CurrentAddressInfo"
 
 import { useAccount } from "wagmi"
@@ -14,11 +15,11 @@ export default function ContentContainer({ customRpc }) {
     const { address: connectedWalletAddress, isConnected } = useAccount()
 
     return (
-        <VStack maxW={"100%"} alignItems={"center"} gap={10} mx={3}>
-            {!isConnected && <ConnectWalletButton />}
+        <VStack maxW={"100%"} alignItems={"center"} gap={5} mx={3} pt={"20px"}>
+            {isConnected ? <CurrentAddressInfo setNftId={setNftId} /> : <ConnectWalletButton />}
+            {!isConnected && !nftId && <MintNftButton nftId={nftId} />}
             {connectedWalletAddress && (
                 <>
-                    <CurrentAddressInfo />
                     <NftDisplay customRpc={customRpc} nftId={nftId} setNftId={setNftId} />
                     <TokenDisplay customRpc={customRpc} nftId={nftId} />
                 </>

@@ -1,17 +1,33 @@
 import { VStack, Text, HStack, Button } from "@chakra-ui/react"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+import { faRightFromBracket, faWallet } from "@fortawesome/free-solid-svg-icons"
 
-import { useAccount, useDisconnect } from "wagmi"
+import { useAccount, useDisconnect, useBalance } from "wagmi"
+import { useEffect } from "react"
 
-export default function CurrentAddressInfo() {
-    const { address: connectedWalletAddress, isConnected } = useAccount()
+import { BigNumber } from "bignumber.js"
+
+export default function CurrentAddressInfo({ setNftId }) {
+    const { address: connectedWalletAddress } = useAccount()
     const { disconnect } = useDisconnect()
 
+    const {
+        data: balanceData,
+        isError: balanceIsError,
+        isLoading: balanceIsLoading,
+    } = useBalance({
+        address: connectedWalletAddress,
+    })
+
+    useEffect(() => {
+        console.log("data", balanceData)
+    }, [balanceData])
+
     return (
-        <VStack gap={3} cursor={"default"}>
-            <HStack className="currentAddressInfoContainer" p={4} borderRadius={"20px"} gap={3} flexWrap={"wrap"} justifyContent={"center"}>
+        <VStack gap={3} minH={"60px"} cursor={"default"}>
+            <HStack className="currentAddressInfoContainer" px={4} py={2} borderRadius={"20px"} gap={3} flexWrap={"wrap"} justifyContent={"center"}>
+                <FontAwesomeIcon icon={faWallet} size={"xl"} />
                 <Text
                     fontFamily={"monospace"}
                     fontSize={"lg"}
@@ -25,7 +41,10 @@ export default function CurrentAddressInfo() {
                     wordBreak="break-word"
                     textAlign={"center"}
                 >
-                    {connectedWalletAddress}
+                    {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
+                </Text>
+                <Text fontWeight={"bold"} fontSize={"lg"}>
+                    {Number(new BigNumber(balanceData?.value.toString()).shiftedBy(-18)).toFixed(4)} ETH
                 </Text>
                 <Button
                     variant={"WalletButton"}
@@ -35,10 +54,10 @@ export default function CurrentAddressInfo() {
                     h={8}
                     onClick={() => {
                         disconnect()
+                        setNftId(null)
                     }}
                 >
                     <HStack gap={3}>
-                        <Text>Disconnect</Text>
                         <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
                     </HStack>
                 </Button>
