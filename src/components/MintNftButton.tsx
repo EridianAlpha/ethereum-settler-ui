@@ -9,13 +9,12 @@ export default function MintNftButton({ nftId }) {
     const { address: connectedWalletAddress, isConnected } = useAccount()
 
     return (
-        <Box position="relative" maxW={"500px"} w={"100%"} minH={{ base: "200px", sm: "500px" }}>
+        <Box position="relative" maxW={"500px"} w={"100%"}>
             <Image src={config.nftIpfsUrl} alt="Unminted NFT Image" borderRadius={"20px"} filter="grayscale(100%) brightness(30%)" />
             <Button
                 position="absolute"
-                top={{ base: "50%", sm: "20%" }}
-                left="35%"
-                transformOrigin="center"
+                top={"20%"}
+                left={"35%"}
                 minH="150px"
                 minW="150px"
                 p={0}
@@ -27,6 +26,8 @@ export default function MintNftButton({ nftId }) {
                 fontWeight={"extrabold"}
                 filter={nftId !== null ? null : "grayscale(100%) brightness(100%)"}
                 border={nftId !== null ? null : "2px solid"}
+                color={"white"}
+                textShadow={"0px 0px 5px black"}
             >
                 Mint NFT
             </Button>

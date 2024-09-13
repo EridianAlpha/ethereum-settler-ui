@@ -15,7 +15,7 @@ export default function ContentContainer({ customRpc }) {
     const { address: connectedWalletAddress, isConnected } = useAccount()
 
     return (
-        <VStack maxW={"100%"} alignItems={"center"} gap={5} mx={3} pt={"20px"}>
+        <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
             {isConnected ? <CurrentAddressInfo setNftId={setNftId} /> : <ConnectWalletButton />}
             {!isConnected && !nftId && <MintNftButton nftId={nftId} />}
             {connectedWalletAddress && (

@@ -115,7 +115,7 @@ export default function Header({ useCustomRpc, setUseCustomRpc }) {
     }
 
     return (
-        <HStack width="100%" borderBottomWidth={1} className={"borderColorDivider"} justifyContent={"center"}>
+        <HStack width="100vw" borderBottomWidth={1} className={"borderColorDivider"} justifyContent={"center"}>
             <Box width="100%" px={{ base: "10px", md: "3rem" }} maxW="1780px">
                 <Box className={"bgPage"}>
                     <HStack h={16} alignItems={"center"} justifyContent={"space-between"}>

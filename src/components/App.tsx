@@ -112,10 +112,10 @@ const App = () => {
     } else {
         return (
             <VStack minH={"100vh"} minW={"100%"} className={"bgPage"} gap={0}>
-                <VStack minW={"100%"} justifyContent="center" alignItems="center" gap={0}>
+                <VStack minW={"100vw"} justifyContent="center" alignItems="center" gap={0}>
                     <Header useCustomRpc={useCustomRpc} setUseCustomRpc={setUseCustomRpc} />
                     {useCustomRpc && <CustomRpcInput setUseCustomRpc={setUseCustomRpc} customRpc={customRpc} setCustomRpc={setCustomRpc} />}
-                    <VStack alignItems={"center"} maxW={"100vw"} px={{ base: "0px", sm: "2vw", xl: "3vw", "2xl": "3vw" }} gap={0}>
+                    <VStack alignItems={"center"} minW={"100vw"} px={{ base: "0px", sm: "2vw", xl: "3vw", "2xl": "3vw" }} gap={0}>
                         <WagmiProvider config={wagmiProviderConfig}>
                             <QueryClientProvider client={queryClient}>
                                 <RainbowKitProvider modalSize="compact" theme={colorMode === "dark" ? darkTheme() : lightTheme()}>

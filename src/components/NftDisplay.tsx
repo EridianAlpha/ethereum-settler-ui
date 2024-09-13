@@ -107,10 +107,10 @@ export default function NftDisplay({ customRpc, nftId, setNftId }) {
     // If the tokenData is fetched, display the NFT metadata
     if (tokenData)
         return (
-            <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={0}>
+            <VStack w={"100%"} alignItems={"center"} pb={5} gap={0}>
                 <VStack
-                    w={"100%"}
                     maxW={"500px"}
+                    w={"100%"}
                     gap={0}
                     className={"bgContent"}
                     borderTopRadius={25}

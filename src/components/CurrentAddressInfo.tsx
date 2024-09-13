@@ -25,43 +25,51 @@ export default function CurrentAddressInfo({ setNftId }) {
     }, [balanceData])
 
     return (
-        <VStack gap={3} minH={"60px"} cursor={"default"}>
-            <HStack className="currentAddressInfoContainer" px={4} py={2} borderRadius={"20px"} gap={3} flexWrap={"wrap"} justifyContent={"center"}>
-                <FontAwesomeIcon icon={faWallet} size={"xl"} />
-                <Text
-                    fontFamily={"monospace"}
-                    fontSize={"lg"}
-                    className="bgPage"
-                    py={1}
-                    px={3}
-                    borderRadius={"full"}
-                    whiteSpace="normal"
-                    overflow="visible"
-                    textOverflow="clip"
-                    wordBreak="break-word"
-                    textAlign={"center"}
-                >
-                    {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
-                </Text>
-                <Text fontWeight={"bold"} fontSize={"lg"}>
-                    {Number(new BigNumber(balanceData?.value.toString()).shiftedBy(-18)).toFixed(4)} ETH
-                </Text>
-                <Button
-                    variant={"WalletButton"}
-                    aria-label={"Wallet button"}
-                    borderRadius={"full"}
-                    px={3}
-                    h={8}
-                    onClick={() => {
-                        disconnect()
-                        setNftId(null)
-                    }}
-                >
-                    <HStack gap={3}>
-                        <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
-                    </HStack>
-                </Button>
-            </HStack>
-        </VStack>
+        <HStack
+            className="currentAddressInfoContainer"
+            minH={"60px"}
+            cursor={"default"}
+            px={4}
+            py={2}
+            borderRadius={"20px"}
+            gap={3}
+            flexWrap={"wrap"}
+            justifyContent={"center"}
+        >
+            <FontAwesomeIcon icon={faWallet} size={"xl"} />
+            <Text
+                fontFamily={"monospace"}
+                fontSize={"lg"}
+                className="bgPage"
+                py={1}
+                px={3}
+                borderRadius={"full"}
+                whiteSpace="normal"
+                overflow="visible"
+                textOverflow="clip"
+                wordBreak="break-word"
+                textAlign={"center"}
+            >
+                {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
+            </Text>
+            <Text fontWeight={"bold"} fontSize={"lg"}>
+                {Number(new BigNumber(balanceData?.value.toString()).shiftedBy(-18)).toFixed(4)} ETH
+            </Text>
+            <Button
+                variant={"WalletButton"}
+                aria-label={"Wallet button"}
+                borderRadius={"full"}
+                px={3}
+                h={8}
+                onClick={() => {
+                    disconnect()
+                    setNftId(null)
+                }}
+            >
+                <HStack gap={3}>
+                    <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
+                </HStack>
+            </Button>
+        </HStack>
     )
 }
