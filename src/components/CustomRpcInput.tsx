@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 import NextLink from "next/link"
 
+import config from "../../public/data/config.json"
+
 export default function CustomRpcInput({ setUseCustomRpc, customRpc, setCustomRpc }) {
     const buttonSize = "27px"
 
@@ -35,12 +37,12 @@ export default function CustomRpcInput({ setUseCustomRpc, customRpc, setCustomRp
                     px={"8px"}
                     borderRadius={"full"}
                     as={NextLink}
-                    href={process.env.NEXT_PUBLIC_JSON_RPC}
+                    href={config.publicJsonRpc}
                     color={"blue"}
                     textDecoration={"underline"}
                     target="_blank"
                 >
-                    {process.env.NEXT_PUBLIC_JSON_RPC} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                    {config.publicJsonRpc} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
                 </Link>{" "}
                 is not working and/or you would prefer to use a different RPC provider to query Ethereum you can enter a custom RPC URL here.
             </Text>

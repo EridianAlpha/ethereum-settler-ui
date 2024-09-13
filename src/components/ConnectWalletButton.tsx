@@ -1,13 +1,15 @@
 import { Text, Box, Image, Button, VStack } from "@chakra-ui/react"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
 
+import config from "../../public/data/config.json"
+
 export default function ConnectWalletButton() {
     const { openConnectModal } = useConnectModal()
 
     return (
         <Box position="relative" maxW={"500px"} w={"100%"}>
             <Image
-                src={process.env.NEXT_PUBLIC_NFT_IPFS_URL}
+                src={config.nftIpfsUrl}
                 alt="Unminted NFT Image"
                 w={"100%"}
                 maxW={"500px"}
@@ -26,7 +28,7 @@ export default function ConnectWalletButton() {
                 borderRadius="full"
                 maxW="95%"
                 minW="200px"
-                w="70%"
+                w="65%"
                 h={"fit-content"}
                 whiteSpace="normal"
                 textAlign="center"

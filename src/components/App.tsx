@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from "react"
 import { VStack, Box, useColorModeValue } from "@chakra-ui/react"
 
+import config from "../../public/data/config.json"
+
 import Header from "./Header"
 import Footer from "./Footer"
 import CustomRpcInput from "./CustomRpcInput"
@@ -27,7 +29,7 @@ const App = () => {
             ...wagmiMainnet,
             rpcUrls: {
                 default: {
-                    http: [customRpc || process.env.NEXT_PUBLIC_JSON_RPC],
+                    http: [customRpc || config.publicJsonRpc],
                 },
             },
         }
@@ -35,11 +37,11 @@ const App = () => {
         const fallbackConfig = createConfig({
             chains: [commonChainsConfig],
             transports: {
-                [wagmiMainnet.id]: http(customRpc || process.env.NEXT_PUBLIC_JSON_RPC),
+                [wagmiMainnet.id]: http(customRpc || config.publicJsonRpc),
             },
         })
 
-        if (process.env.NEXT_PUBLIC_WALLETCONNECT_ID) {
+        if (config.walletconnectId) {
             // If WalletConnect ID exists check if it is valid
             if (isValidWalletConnectId) {
                 // If it is valid, use the default config with WalletConnect
@@ -48,7 +50,7 @@ const App = () => {
                 setWagmiProviderConfig(
                     getDefaultConfig({
                         appName: "Ethereum Settler",
-                        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID,
+                        projectId: config.walletconnectId,
                         chains: [commonChainsConfig],
                         ssr: true,
                     })
@@ -64,13 +66,13 @@ const App = () => {
     }, [customRpc, isValidWalletConnectId])
 
     useEffect(() => {
-        if (process.env.NEXT_PUBLIC_WALLETCONNECT_ID) {
-            fetch(`https://explorer-api.walletconnect.com/v3/wallets?projectId=${process.env.NEXT_PUBLIC_WALLETCONNECT_ID}`)
+        if (config.walletconnectId) {
+            fetch(`https://explorer-api.walletconnect.com/v3/wallets?projectId=${config.walletconnectId}`)
                 .then((response) => {
                     if (response.ok) {
                         setIsValidWalletConnectId(true)
                     } else {
-                        console.log("Invalid WalletConnect projectId:", process.env.NEXT_PUBLIC_WALLETCONNECT_ID)
+                        console.log("Invalid WalletConnect projectId:", config.walletconnectId)
                         setIsValidWalletConnectId(false)
                         createWagmiProviderConfig()
                     }

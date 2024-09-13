@@ -18,7 +18,7 @@ export default function NftDisplay({ customRpc }) {
     const getFormattedDate = () => {
         const date = new Date()
         const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, "0") // Months are 0-based, so +1
+        const month = String(date.getMonth() + 1).padStart(2, "0")
         const day = String(date.getDate()).padStart(2, "0")
 
         return `${year}-${month}-${day}`
@@ -43,6 +43,31 @@ export default function NftDisplay({ customRpc }) {
 
     useEffect(() => {
         const fetchNftUri = async () => {
+            // try {
+            //     if (customRpc) {
+            //         try {
+            //             const cumulativeClaimed = await fetchCumulativeClaimed(type, address, customRpc)
+            //             setPreviouslyClaimedRewards(cumulativeClaimed)
+            //             setFetchResult({ success: true, data: { cumulativeClaimed } })
+            //         } catch (error) {
+            //             console.error("Error fetching previously claimed rewards:", error)
+            //             setFetchResult({ success: false, error: error.message })
+            //         }
+            //     } else {
+            //         const fetchPreviouslyClaimedRewardsResponse = await fetch(`/api/fetchPreviouslyClaimedRewards/?type=${type}&address=${address}`)
+            //         if (!fetchPreviouslyClaimedRewardsResponse.ok) {
+            //             throw new Error(`Error: ${fetchPreviouslyClaimedRewardsResponse.statusText}`)
+            //         }
+            //         const responseJson = await fetchPreviouslyClaimedRewardsResponse.json()
+            //         setPreviouslyClaimedRewards(responseJson.cumulativeClaimed)
+            //         setFetchResult({ success: true, data: responseJson })
+            //     }
+            // } catch (error) {
+            //     console.error("Error fetching previously claimed rewards:", error)
+            //     setFetchResult({ success: false, error: error.message })
+            //     setIsLoading(false)
+            // }
+
             // Define the provider and contract details
             const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545")
             const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
