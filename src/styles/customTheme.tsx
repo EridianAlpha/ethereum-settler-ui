@@ -18,6 +18,12 @@ const rainbowAnimation = keyframes`
   100% { background-position: 0% 50%; }
 `
 
+const scaleAnimation = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`
+
 const customTheme = extendTheme({
     styles: {
         global: (props: StyleFunctionProps) => ({
@@ -104,15 +110,15 @@ const customTheme = extendTheme({
                 ConnectWalletButton: (props: StyleFunctionProps) => ({
                     filter: "brightness(1.7)",
                     _hover: {
-                        transform: "translate(-50%, -50%) scale(1.1)",
+                        filter: "brightness(2)",
                     },
                     _active: {
-                        filter: "brightness(1.9)",
+                        filter: "brightness(2.3)",
                     },
                     backgroundImage: "linear-gradient(270deg, pink, purple, blue, red, blue, purple, pink)",
                     backgroundSize: "1000% 1000%",
-                    animation: `${rainbowAnimation} 20s linear infinite`,
-                    textShadow: "0px 0px 5px black",
+                    animation: `${rainbowAnimation} 20s linear infinite, ${scaleAnimation} 2s ease-in-out infinite`,
+                    textShadow: props.colorMode === "dark" ? "0px 0px 5px black" : "0px",
                 }),
                 WalletButton: (props: StyleFunctionProps) => ({
                     border: "3px solid",
@@ -151,6 +157,13 @@ const customTheme = extendTheme({
                             ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
                             : darkenColor(props.theme.colors.contentBackground.light, 0),
                     cursor: "default",
+                }),
+                MintNftDisabledButton: (props: StyleFunctionProps) => ({
+                    backgroundImage: "linear-gradient(270deg, pink, purple, blue, red, blue, purple, pink)",
+                    backgroundSize: "1000% 1000%",
+                    textShadow: props.colorMode === "dark" ? "0px 0px 5px black" : "0px",
+                    cursor: "default",
+                    pointerEvents: "none",
                 }),
             },
         },
