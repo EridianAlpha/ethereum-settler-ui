@@ -36,7 +36,6 @@ export default function CurrentAddressInfo({ setNftId }) {
             flexWrap={"wrap"}
             justifyContent={"center"}
         >
-            <FontAwesomeIcon icon={faWallet} size={"xl"} />
             <Text
                 fontFamily={"monospace"}
                 fontSize={"lg"}
@@ -50,6 +49,7 @@ export default function CurrentAddressInfo({ setNftId }) {
                 wordBreak="break-word"
                 textAlign={"center"}
             >
+                <FontAwesomeIcon icon={faWallet} size={"lg"} />{" "}
                 {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
             </Text>
             <Text fontWeight={"bold"} fontSize={"lg"}>
