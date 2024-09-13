@@ -14,7 +14,8 @@ export default function ConnectWalletButton() {
                 w="100%"
                 py={3}
                 px={8}
-                variant="ConnectWalletButton"
+                variant="RainbowButton"
+                className="rainbowButtonAnimation"
                 fontSize="2xl"
                 borderRadius="full"
                 h={"fit-content"}

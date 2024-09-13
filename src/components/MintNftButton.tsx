@@ -13,12 +13,14 @@ export default function MintNftButton({ nftId }) {
             <Image src={config.nftIpfsUrl} alt="Unminted NFT Image" borderRadius={"20px"} filter="grayscale(100%) brightness(30%)" />
             <Button
                 position="absolute"
-                top={"20%"}
-                left={"35%"}
+                transform="translate(-50%, -50%)"
+                top={{ base: "40%", sm: "35%" }}
+                left="50%"
                 minH="150px"
                 minW="150px"
                 p={0}
-                variant={nftId !== null ? "ConnectWalletButton" : "MintNftDisabledButton"}
+                variant={nftId !== null ? "RainbowButton" : "MintNftDisabledButton"}
+                className={nftId !== null ? "rainbowButtonAnimationOffset" : null}
                 fontSize="2xl"
                 borderRadius="full"
                 whiteSpace="normal"

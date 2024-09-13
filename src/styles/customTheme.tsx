@@ -24,6 +24,12 @@ const scaleAnimation = keyframes`
   100% { transform: scale(1); }
 `
 
+const scaleAnimationOffset = keyframes`
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.05); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+`
+
 const customTheme = extendTheme({
     styles: {
         global: (props: StyleFunctionProps) => ({
@@ -63,6 +69,12 @@ const customTheme = extendTheme({
             "div .chakra-tooltip__arrow": {
                 width: "130% !important",
                 height: "130% !important",
+            },
+            ".rainbowButtonAnimation": {
+                animation: `${rainbowAnimation} 20s linear infinite, ${scaleAnimation} 2s ease-in-out infinite`,
+            },
+            ".rainbowButtonAnimationOffset": {
+                animation: `${rainbowAnimation} 20s linear infinite, ${scaleAnimationOffset} 2s ease-in-out infinite`,
             },
         }),
     },
@@ -107,7 +119,7 @@ const customTheme = extendTheme({
                                 : darkenColor(props.theme.colors.pageBackground.light, 0.2),
                     },
                 }),
-                ConnectWalletButton: (props: StyleFunctionProps) => ({
+                RainbowButton: (props: StyleFunctionProps) => ({
                     filter: "brightness(1.7)",
                     _hover: {
                         filter: "brightness(2)",
@@ -117,7 +129,6 @@ const customTheme = extendTheme({
                     },
                     backgroundImage: "linear-gradient(270deg, pink, purple, blue, red, blue, purple, pink)",
                     backgroundSize: "1000% 1000%",
-                    animation: `${rainbowAnimation} 20s linear infinite, ${scaleAnimation} 2s ease-in-out infinite`,
                     textShadow: props.colorMode === "dark" ? "0px 0px 5px black" : "0px",
                 }),
                 MintNftDisabledButton: (props: StyleFunctionProps) => ({
