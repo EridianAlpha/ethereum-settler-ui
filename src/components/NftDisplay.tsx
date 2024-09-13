@@ -5,10 +5,12 @@ import NextLink from "next/link"
 
 import { useAccount } from "wagmi"
 
+import config from "../../public/data/config.json"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
-export default function NftDisplay({ customRpc }) {
+export default function NftDisplay({ customRpc, nftId, setNftId }) {
     const [tokenData, setTokenData] = useState(null)
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
@@ -43,44 +45,29 @@ export default function NftDisplay({ customRpc }) {
 
     useEffect(() => {
         const fetchNftUri = async () => {
-            // try {
-            //     if (customRpc) {
-            //         try {
-            //             const cumulativeClaimed = await fetchCumulativeClaimed(type, address, customRpc)
-            //             setPreviouslyClaimedRewards(cumulativeClaimed)
-            //             setFetchResult({ success: true, data: { cumulativeClaimed } })
-            //         } catch (error) {
-            //             console.error("Error fetching previously claimed rewards:", error)
-            //             setFetchResult({ success: false, error: error.message })
-            //         }
-            //     } else {
-            //         const fetchPreviouslyClaimedRewardsResponse = await fetch(`/api/fetchPreviouslyClaimedRewards/?type=${type}&address=${address}`)
-            //         if (!fetchPreviouslyClaimedRewardsResponse.ok) {
-            //             throw new Error(`Error: ${fetchPreviouslyClaimedRewardsResponse.statusText}`)
-            //         }
-            //         const responseJson = await fetchPreviouslyClaimedRewardsResponse.json()
-            //         setPreviouslyClaimedRewards(responseJson.cumulativeClaimed)
-            //         setFetchResult({ success: true, data: responseJson })
-            //     }
-            // } catch (error) {
-            //     console.error("Error fetching previously claimed rewards:", error)
-            //     setFetchResult({ success: false, error: error.message })
-            //     setIsLoading(false)
-            // }
-
-            // Define the provider and contract details
-            const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545")
-            const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-
-            // Contract ABI with only the tokenURI function
-            const abi = ["function tokenURI(uint256 tokenId) view returns (string)"]
-
-            // Create a contract instance
-            const contract = new ethers.Contract(contractAddress, abi, provider)
-
             try {
-                // TODO: Currently hardcoded to tokenId 1, but this should be dynamic based on user input and/or connected wallet
-                const uri = await contract.tokenURI(1)
+                // Define the provider and contract details
+                const provider = new ethers.JsonRpcProvider(customRpc ? customRpc : config.publicJsonRpc)
+
+                // Settlement NFT contract ABI
+                const abi = [
+                    "function tokenURI(uint256 tokenId) view returns (string)",
+                    "function getOwnerToId(address owner) view returns (uint256)",
+                ]
+
+                // Create a contract instance
+                const contract = new ethers.Contract(config.nftContractAddress, abi, provider)
+
+                // Fetch the tokenURI for the connected wallet address
+                const nftId = await contract.getOwnerToId(connectedWalletAddress)
+                console.log("NFT ID:", nftId)
+                setNftId(nftId)
+
+                // If the nftId is 0, the connectedWalletAddress does not have an NFT, so return early
+                if (nftId == 0) return
+
+                // Fetch the tokenURI for the NFT
+                const uri = await contract.tokenURI(nftId)
 
                 // Remove the 'data:application/json;base64,' part from the uri and decode the base64 string
                 const base64Data = uri.replace("data:application/json;base64,", "")
@@ -109,6 +96,7 @@ export default function NftDisplay({ customRpc }) {
                     setSvgContent(`data:image/svg+xml;base64,${reEncodedSvg}`)
                 }
             } catch (error) {
+                // TODO: Add a state error here to update the UI if there is an error fetching the tokenURI
                 console.error("Error fetching tokenURI:", error)
             }
         }
@@ -116,6 +104,7 @@ export default function NftDisplay({ customRpc }) {
         fetchNftUri()
     }, [])
 
+    // If the tokenData is fetched, display the NFT metadata
     if (tokenData)
         return (
             <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={0}>
@@ -197,5 +186,24 @@ export default function NftDisplay({ customRpc }) {
             </VStack>
         )
 
-    return <Text>Fetching token data...</Text>
+    // If the tokenData is not yet fetched, display a loading message
+    if (nftId === null) {
+        return (
+            <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={5}>
+                <Text>Fetching NFT data...</Text>
+            </VStack>
+        )
+    }
+
+    // If the nftId is 0, display a message that no NFTs were found for the connected address
+    if (nftId == 0) {
+        return (
+            <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={5}>
+                <Text>No NFTs found for this address. Let's mint one!</Text>
+            </VStack>
+        )
+    }
+
+    // If there is an error fetching the token data, display an error message
+    return <Text>Error fetching NFT data</Text>
 }

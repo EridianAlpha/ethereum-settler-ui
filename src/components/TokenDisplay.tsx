@@ -4,7 +4,7 @@ import { Text } from "@chakra-ui/react"
 
 import { BigNumber } from "bignumber.js"
 
-export default function TokenDisplay({ customRpc }) {
+export default function TokenDisplay({ customRpc, nftId }) {
     const [tokenBalance, setTokenBalance] = useState(0)
 
     useEffect(() => {
@@ -26,7 +26,9 @@ export default function TokenDisplay({ customRpc }) {
                 // Start the interval after fetching the initial balance
                 intervalId = setInterval(() => {
                     // TODO: Update this increment to be the value of TOKEN_EMISSION_RATE shifted by -18 from the contract
-                    setTokenBalance((prevBalance) => prevBalance + 1)
+
+                    // If an nftId exists increment the token balance
+                    nftId && setTokenBalance((prevBalance) => prevBalance + 1)
                 }, 1000)
             } catch (error) {
                 console.error("Error fetching token balance:", error)
@@ -38,7 +40,7 @@ export default function TokenDisplay({ customRpc }) {
 
         // Cleanup the interval on component unmount
         return () => clearInterval(intervalId)
-    }, [])
+    }, [nftId])
 
     return <Text>Token Balance: {tokenBalance}</Text>
 }

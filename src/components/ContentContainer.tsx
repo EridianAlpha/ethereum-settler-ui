@@ -9,6 +9,8 @@ import CurrentAddressInfo from "./CurrentAddressInfo"
 import { useAccount } from "wagmi"
 
 export default function ContentContainer({ customRpc }) {
+    const [nftId, setNftId] = useState(null)
+
     const { address: connectedWalletAddress, isConnected } = useAccount()
 
     return (
@@ -17,8 +19,8 @@ export default function ContentContainer({ customRpc }) {
             {connectedWalletAddress && (
                 <>
                     <CurrentAddressInfo />
-                    <NftDisplay customRpc={customRpc} />
-                    <TokenDisplay customRpc={customRpc} />
+                    <NftDisplay customRpc={customRpc} nftId={nftId} setNftId={setNftId} />
+                    <TokenDisplay customRpc={customRpc} nftId={nftId} />
                 </>
             )}
         </VStack>
