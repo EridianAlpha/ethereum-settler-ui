@@ -3,13 +3,17 @@ import { ethers } from "ethers"
 import { VStack, HStack, Text, Box, Link } from "@chakra-ui/react"
 import NextLink from "next/link"
 
+import { useAccount } from "wagmi"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
-export default function NftDisplay() {
+export default function NftDisplay({ customRpc }) {
     const [tokenData, setTokenData] = useState(null)
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
+
+    const { address: connectedWalletAddress, isConnected } = useAccount()
 
     const getFormattedDate = () => {
         const date = new Date()
@@ -89,7 +93,7 @@ export default function NftDisplay() {
 
     if (tokenData)
         return (
-            <VStack w={"100%"} maxW={"90%"} alignItems={"center"} pb={5} px={3} gap={0}>
+            <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={0}>
                 <VStack
                     w={"100%"}
                     maxW={"500px"}
@@ -139,7 +143,7 @@ export default function NftDisplay() {
                                 label="Mint Timestamp"
                                 content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
                             />
-                            <NftMetadata label="Current Owner" content="0x000..." />
+                            <NftMetadata label="Current Owner" content={connectedWalletAddress} />
                             <NftMetadata
                                 label="Background Image"
                                 content={tokenData.image}

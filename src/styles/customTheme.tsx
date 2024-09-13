@@ -3,12 +3,20 @@ import type { StyleFunctionProps } from "@chakra-ui/styled-system"
 import { cssVar } from "@chakra-ui/theme-tools"
 import { lighten, darken } from "polished"
 
+import { keyframes } from "@emotion/react"
+
 function lightenColor(mainColor, value) {
     return lighten(value, mainColor)
 }
 function darkenColor(mainColor, value) {
     return darken(value, mainColor)
 }
+
+const rainbowAnimation = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`
 
 const customTheme = extendTheme({
     styles: {
@@ -21,6 +29,13 @@ const customTheme = extendTheme({
                     props.colorMode === "dark"
                         ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
                         : darkenColor(props.theme.colors.pageBackground.light, 0.05),
+            },
+            ".currentAddressInfoContainer": {
+                bg:
+                    props.colorMode === "dark"
+                        ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                        : darkenColor(props.theme.colors.contentBackground.light, 0),
+                border: "4px solid green",
             },
             ".tooltip": {
                 bg:
@@ -85,6 +100,57 @@ const customTheme = extendTheme({
                                 ? lightenColor(props.theme.colors.pageBackground.dark, 0.3)
                                 : darkenColor(props.theme.colors.pageBackground.light, 0.2),
                     },
+                }),
+                ConnectWalletButton: (props: StyleFunctionProps) => ({
+                    filter: "brightness(1.7)",
+                    _hover: {
+                        transform: "translate(-50%, -50%) scale(1.1)",
+                    },
+                    _active: {
+                        filter: "brightness(1.9)",
+                    },
+                    backgroundImage: "linear-gradient(270deg, pink, purple, blue, red, blue, purple, pink)",
+                    backgroundSize: "1000% 1000%",
+                    animation: `${rainbowAnimation} 20s linear infinite`,
+                    textShadow: "0px 0px 5px black",
+                }),
+                WalletButton: (props: StyleFunctionProps) => ({
+                    border: "3px solid",
+                    borderColor: "orange",
+                    bg:
+                        props.colorMode === "dark"
+                            ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                            : darkenColor(props.theme.colors.contentBackground.light, 0),
+                    _hover: {
+                        bg: props.colorMode === "dark" ? darkenColor(props.theme.colors.orange, 0.2) : lightenColor(props.theme.colors.orange, 0.2),
+                    },
+                    _active: {
+                        bg: "orange",
+                    },
+                }),
+                ShowResultsButton: (props: StyleFunctionProps) => ({
+                    border: "3px solid",
+                    borderColor: "green",
+                    bg:
+                        props.colorMode === "dark"
+                            ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                            : darkenColor(props.theme.colors.contentBackground.light, 0),
+                    _hover: {
+                        bg: props.colorMode === "dark" ? darkenColor(props.theme.colors.green, 0.2) : lightenColor(props.theme.colors.green, 0.2),
+                    },
+                    _active: {
+                        bg: "green",
+                    },
+                }),
+                ShowResultsButtonError: (props: StyleFunctionProps) => ({
+                    border: "3px solid",
+                    borderColor: "red",
+                    fontSize: "sm",
+                    bg:
+                        props.colorMode === "dark"
+                            ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                            : darkenColor(props.theme.colors.contentBackground.light, 0),
+                    cursor: "default",
                 }),
             },
         },

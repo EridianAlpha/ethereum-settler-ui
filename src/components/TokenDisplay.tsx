@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { VStack, HStack, Text } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 
 import { BigNumber } from "bignumber.js"
 
-export default function TokenDisplay() {
+export default function TokenDisplay({ customRpc }) {
     const [tokenBalance, setTokenBalance] = useState(0)
 
     useEffect(() => {

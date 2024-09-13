@@ -3,8 +3,6 @@ import {
     Text,
     HStack,
     VStack,
-    Image,
-    Tooltip,
     Button,
     useDisclosure,
     Drawer,
@@ -13,13 +11,14 @@ import {
     DrawerContent,
     DrawerCloseButton,
     useColorMode,
+    Tooltip,
 } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faGithub, faXTwitter } from "@fortawesome/free-brands-svg-icons"
-import { faSun, faMoon, faBars } from "@fortawesome/free-solid-svg-icons"
+import { faGithub } from "@fortawesome/free-brands-svg-icons"
+import { faSun, faMoon, faBars, faSatelliteDish } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
 
-function HeaderButtons({ displayZone }) {
+function HeaderButtons({ displayZone, buttonLabels, useCustomRpc, setUseCustomRpc }) {
     const { colorMode, toggleColorMode } = useColorMode()
 
     const CustomButtonTooltip = ({ labelText, children }) => {
@@ -52,19 +51,19 @@ function HeaderButtons({ displayZone }) {
                     Links
                 </Text>
             )}
-            <Link href={"https://x.com/EridianAlpha"} target="_blank">
-                <Button variant={"HeaderButton"} aria-label={"View X.com"} borderRadius={"full"} p={2}>
-                    <HStack gap={3}>
-                        <FontAwesomeIcon icon={faXTwitter} size={"xl"} />
-                        {displayZone == "drawer" && <Text pr={1}>x.com</Text>}
-                    </HStack>
-                </Button>
-            </Link>
-            <Link href={"https://github.com/EridianAlpha"} target="_blank">
+            <Link href={"https://github.com/EridianAlpha/ethereum-settler-ui"} target="_blank">
                 <Button variant={"HeaderButton"} aria-label={"View GitHub Source"} borderRadius={"full"} p={2}>
                     <HStack gap={3}>
                         <FontAwesomeIcon icon={faGithub} size={"xl"} />
-                        {displayZone == "drawer" && <Text pr={1}>GitHub</Text>}
+                        {buttonLabels && <Text pr={1}>UI Repo</Text>}
+                    </HStack>
+                </Button>
+            </Link>
+            <Link href={"https://github.com/EridianAlpha/ethereum-settler"} target="_blank">
+                <Button variant={"HeaderButton"} aria-label={"View GitHub Source"} borderRadius={"full"} p={2}>
+                    <HStack gap={3}>
+                        <FontAwesomeIcon icon={faGithub} size={"xl"} />
+                        {buttonLabels && <Text pr={1}>Contract Repo</Text>}
                     </HStack>
                 </Button>
             </Link>
@@ -74,10 +73,28 @@ function HeaderButtons({ displayZone }) {
                     Settings
                 </Text>
             )}
+            <CustomButtonTooltip labelText="Use a custom RPC">
+                <Button
+                    variant={"HeaderButton"}
+                    px={2}
+                    aria-label="Use a custom RPC"
+                    onClick={() => {
+                        setUseCustomRpc(!useCustomRpc)
+                    }}
+                    borderRadius={"full"}
+                >
+                    <HStack gap={3}>
+                        <Box color={useCustomRpc ? "orange" : null}>
+                            <FontAwesomeIcon icon={faSatelliteDish} size={"xl"} />
+                        </Box>
+                        {displayZone == "drawer" && <Text pr={1}>Use a custom RPC</Text>}
+                    </HStack>
+                </Button>
+            </CustomButtonTooltip>
             <CustomButtonTooltip labelText="Toggle color theme">
                 <Button variant={"HeaderButton"} px={2} aria-label="Toggle color theme" onClick={toggleColorMode} borderRadius={"full"}>
                     <HStack gap={3}>
-                        {colorMode === "light" ? <FontAwesomeIcon icon={faMoon} size={"xl"} /> : <FontAwesomeIcon icon={faSun} size={"xl"} />}
+                        {colorMode == "light" ? <FontAwesomeIcon icon={faMoon} size={"xl"} /> : <FontAwesomeIcon icon={faSun} size={"xl"} />}
                         {displayZone == "drawer" && <Text pr={1}>Toggle color theme</Text>}
                     </HStack>
                 </Button>
@@ -86,7 +103,7 @@ function HeaderButtons({ displayZone }) {
     )
 }
 
-export default function Header({}) {
+export default function Header({ useCustomRpc, setUseCustomRpc }) {
     const isSSR = typeof window === "undefined"
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -103,7 +120,6 @@ export default function Header({}) {
                 <Box className={"bgPage"}>
                     <HStack h={16} alignItems={"center"} justifyContent={"space-between"}>
                         <HStack spacing={3} alignItems={"center"} cursor={"pointer"} onClick={navigateHome}>
-                            {/* <Image maxW={10} objectFit={"cover"} src={"./images/EthLogo.svg"} alt={"Project Logo"} /> */}
                             <Text mt={"-10px"} fontSize={"5xl"}>
                                 🏕️
                             </Text>
@@ -111,13 +127,13 @@ export default function Header({}) {
                                 Ethereum Settler
                             </Box>
                         </HStack>
-                        <HStack display={{ base: "none", sm: "flex" }} spacing={5}>
-                            <HeaderButtons displayZone={"header"} />
+                        <HStack display={{ base: "none", lg: "flex" }} spacing={5}>
+                            <HeaderButtons displayZone={"header"} buttonLabels={true} useCustomRpc={useCustomRpc} setUseCustomRpc={setUseCustomRpc} />
                         </HStack>
                         <Button
                             variant={"HeaderButton"}
                             aria-label="Open Menu"
-                            display={{ base: "flex", sm: "none" }}
+                            display={{ base: "flex", lg: "none" }}
                             onClick={onOpen}
                             borderRadius={"full"}
                             p={0}
@@ -133,7 +149,7 @@ export default function Header({}) {
                     <DrawerCloseButton />
                     <DrawerBody>
                         <VStack spacing={5} alignItems={"start"}>
-                            <HeaderButtons displayZone={"drawer"} />
+                            <HeaderButtons displayZone={"drawer"} buttonLabels={true} useCustomRpc={useCustomRpc} setUseCustomRpc={setUseCustomRpc} />
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>
