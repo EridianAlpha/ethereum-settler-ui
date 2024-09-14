@@ -2,11 +2,14 @@ import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { Text } from "@chakra-ui/react"
 import { BigNumber } from "bignumber.js"
+import { useAccount } from "wagmi"
 
 import config from "../../public/data/config.json"
 
 export default function TokenDisplay({ provider, nftId }) {
     const [tokenBalance, setTokenBalance] = useState(0)
+
+    const { address: connectedWalletAddress } = useAccount()
 
     useEffect(() => {
         let intervalId
@@ -16,7 +19,7 @@ export default function TokenDisplay({ provider, nftId }) {
             const contract = new ethers.Contract(config.tokenContractAddress, abi, provider)
 
             try {
-                const balance = await contract.balanceOf("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+                const balance = await contract.balanceOf(connectedWalletAddress)
                 const formattedBalance = Number(new BigNumber(balance).shiftedBy(-18))
 
                 // Set the initial token balance
@@ -35,11 +38,11 @@ export default function TokenDisplay({ provider, nftId }) {
         }
 
         // Fetch the initial balance
-        fetchTokenBalance()
+        if (provider && connectedWalletAddress) fetchTokenBalance()
 
         // Cleanup the interval on component unmount
         return () => clearInterval(intervalId)
-    }, [nftId])
+    }, [provider, connectedWalletAddress, nftId])
 
     return <Text>Token Balance: {tokenBalance}</Text>
 }

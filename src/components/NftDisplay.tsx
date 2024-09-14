@@ -6,7 +6,6 @@ import NextLink from "next/link"
 import { useAccount } from "wagmi"
 
 import config from "../../public/data/config.json"
-import MintNftButton from "./MintNftButton"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
@@ -16,7 +15,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
 
-    const { address: connectedWalletAddress, isConnected } = useAccount()
+    const { address: connectedWalletAddress } = useAccount()
 
     const getFormattedDate = () => {
         const date = new Date()
@@ -97,8 +96,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                 console.error("Error fetching tokenURI:", error)
             }
         }
-
-        fetchNftUri()
+        if (provider) fetchNftUri()
     }, [provider, isMintTransactionConfirmed])
 
     // If the tokenData is fetched, display the NFT metadata
