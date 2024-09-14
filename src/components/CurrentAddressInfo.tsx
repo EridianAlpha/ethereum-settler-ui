@@ -20,10 +20,6 @@ export default function CurrentAddressInfo({ setNftId }) {
         address: connectedWalletAddress,
     })
 
-    useEffect(() => {
-        console.log("data", balanceData)
-    }, [balanceData])
-
     return (
         <HStack
             className="currentAddressInfoContainer"
