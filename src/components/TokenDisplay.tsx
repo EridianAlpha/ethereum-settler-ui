@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { Text } from "@chakra-ui/react"
-
 import { BigNumber } from "bignumber.js"
 
-export default function TokenDisplay({ customRpc, nftId }) {
+import config from "../../public/data/config.json"
+
+export default function TokenDisplay({ provider, nftId }) {
     const [tokenBalance, setTokenBalance] = useState(0)
 
     useEffect(() => {
         let intervalId
 
         const fetchTokenBalance = async () => {
-            const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545")
-            const contractAddress = "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be"
             const abi = ["function balanceOf(address account) view returns (uint256)"]
-            const contract = new ethers.Contract(contractAddress, abi, provider)
+            const contract = new ethers.Contract(config.tokenContractAddress, abi, provider)
 
             try {
                 const balance = await contract.balanceOf("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")

@@ -11,7 +11,7 @@ import MintNftButton from "./MintNftButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
-export default function NftDisplay({ customRpc, nftId, setNftId }) {
+export default function NftDisplay({ provider, nftId, setNftId, isMintTransactionConfirmed }) {
     const [tokenData, setTokenData] = useState(null)
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
@@ -47,9 +47,6 @@ export default function NftDisplay({ customRpc, nftId, setNftId }) {
     useEffect(() => {
         const fetchNftUri = async () => {
             try {
-                // Define the provider and contract details
-                const provider = new ethers.JsonRpcProvider(customRpc ? customRpc : config.publicJsonRpc)
-
                 // Settlement NFT contract ABI
                 const abi = [
                     "function tokenURI(uint256 tokenId) view returns (string)",
@@ -102,7 +99,7 @@ export default function NftDisplay({ customRpc, nftId, setNftId }) {
         }
 
         fetchNftUri()
-    }, [])
+    }, [provider, isMintTransactionConfirmed])
 
     // If the tokenData is fetched, display the NFT metadata
     if (tokenData)
@@ -195,13 +192,5 @@ export default function NftDisplay({ customRpc, nftId, setNftId }) {
         )
     }
 
-    // If the nftId is 0, display a message that no NFTs were found for the connected address
-    if (nftId == 0) {
-        console.log("nftId:", nftId)
-        return <MintNftButton nftId={nftId} />
-    }
-
-    // If there is an error fetching the token data, display an error message
-    // TODO: There is another state before this where it is showing this error before the image loads
-    return <Text>Error fetching NFT data</Text>
+    // TODO: If there is an error fetching the token data, display an error message
 }
