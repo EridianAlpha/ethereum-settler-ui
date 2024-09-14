@@ -165,8 +165,8 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
                 border={nftId !== null ? null : "2px solid"}
                 color={"white"}
                 textShadow={"0px 0px 5px black"}
-                onClick={transactionState.isWaitingForSignature || transactionState.isConfirming ? null : handleTransaction}
-                pointerEvents={transactionState.isWaitingForSignature || transactionState.isConfirming ? "none" : "auto"}
+                onClick={nftId === null || transactionState.isWaitingForSignature || transactionState.isConfirming ? null : handleTransaction}
+                pointerEvents={nftId === null || transactionState.isWaitingForSignature || transactionState.isConfirming ? "none" : "auto"}
             >
                 {transactionState.isWaitingForSignature && (
                     <VStack gap={0}>
