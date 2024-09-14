@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
-import { HStack, Text, Box, Image, Button, Spinner, VStack } from "@chakra-ui/react"
+import { VStack, Text, Box, Image, Button, Spinner, Link, useToast } from "@chakra-ui/react"
 import { mainnet } from "wagmi/chains"
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
 import { http, createConfig } from "@wagmi/core"
-import { ethers } from "ethers"
+import NextLink from "next/link"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 
 import config from "../../public/data/config.json"
 
@@ -18,6 +21,9 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
 
     const { address: connectedWalletAddress } = useAccount()
     const { data: hash, error, writeContract } = useWriteContract()
+
+    // Create a toast to display transaction status notifications
+    const toast = useToast()
 
     // Create a config object for the transaction
     const txConfig = createConfig({
@@ -78,11 +84,55 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
         }
         if (isConfirmed && !transactionState?.isConfirmed) {
             console.log("Transaction confirmed: ", hash)
+            toast({
+                title: "Mint transaction confirmed!",
+                description: (
+                    <Text pt={1}>
+                        View on{" "}
+                        <Link
+                            className="bgPage"
+                            py={"2px"}
+                            px={"8px"}
+                            borderRadius={"full"}
+                            as={NextLink}
+                            href={`https://etherscan.io/tx/${hash}`}
+                            color={"blue"}
+                            textDecoration={"underline"}
+                            target="_blank"
+                        >
+                            Etherscan <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                        </Link>
+                    </Text>
+                ),
+                status: "success",
+                duration: 10000,
+                isClosable: true,
+                position: "top-right",
+                variant: "solid",
+                containerStyle: {
+                    bg: "green",
+                    borderRadius: "15px",
+                },
+            })
             setIsMintTransactionConfirmed(true)
             setTransactionState({ ...transactionState, error: null, isWaitingForSignature: false, isConfirming: false, isConfirmed: true })
         }
         if (error && !transactionState?.error) {
             console.log("Error:", error)
+            toast({
+                title: "Transaction error!",
+                description: error.message.split("\n")[0],
+                status: "success",
+                duration: 10000,
+                isClosable: true,
+                position: "top-right",
+                variant: "solid",
+                containerStyle: {
+                    bg: "red",
+                    borderRadius: "15px",
+                },
+            })
+
             setTransactionState({
                 ...transactionState,
                 error: error.message,
