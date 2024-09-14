@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Text, Box, Image, Button, VStack } from "@chakra-ui/react"
+import { HStack, Text, Box, Image, Button, Spinner, VStack } from "@chakra-ui/react"
 import { mainnet } from "wagmi/chains"
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
 import { http, createConfig } from "@wagmi/core"
@@ -115,9 +115,23 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
                 border={nftId !== null ? null : "2px solid"}
                 color={"white"}
                 textShadow={"0px 0px 5px black"}
-                onClick={handleTransaction}
+                onClick={transactionState.isWaitingForSignature || transactionState.isConfirming ? null : handleTransaction}
+                pointerEvents={transactionState.isWaitingForSignature || transactionState.isConfirming ? "none" : "auto"}
             >
-                Mint NFT
+                {transactionState.isWaitingForSignature && (
+                    <VStack gap={0}>
+                        <Text pt={5}>Sign tx in</Text>
+                        <Text pb={4}>your wallet</Text>
+                        <Spinner size={"lg"} speed="0.8s" />
+                    </VStack>
+                )}
+                {transactionState.isConfirming && (
+                    <VStack gap={4} pt={12}>
+                        <Text>Confirming</Text>
+                        <Spinner size={"lg"} speed="0.8s" />
+                    </VStack>
+                )}
+                {!transactionState.isWaitingForSignature && !transactionState.isConfirming && <Text>Mint NFT</Text>}
             </Button>
         </Box>
     )
