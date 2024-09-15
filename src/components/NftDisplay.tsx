@@ -29,10 +29,10 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
 
     const NftMetadata = ({ label, content, link = "", downloadName = "" }) => {
         return (
-            <VStack gap={1} className="bgPage" borderRadius={15} px={3} py={1}>
+            <VStack gap={1} className="bgPage" borderRadius={15} px={3} py={1} wordBreak="break-all" whiteSpace="normal">
                 <Text fontWeight={"bold"}>{label}</Text>
                 {link ? (
-                    <Text wordBreak="break-all" whiteSpace="normal" textAlign={"center"}>
+                    <Text textAlign={"center"}>
                         <Link as={NextLink} href={link} color={"blue"} target="_blank" download={downloadName} rel="noopener noreferrer">
                             {content}
                         </Link>
@@ -118,13 +118,13 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                         {svgContent && <embed src={svgContent} />}
                     </Box>
                     <HStack
-                        justifyContent={"center"}
+                        justifyContent={"space-between"}
                         w={"100%"}
                         cursor={"pointer"}
                         onClick={() => setIsViewNftMetadataExpanded(!isViewNftMetadataExpanded)}
                         className={"bgContent"}
-                        gap={5}
                         py={3}
+                        px={3}
                     >
                         <Box
                             boxSize={6}
