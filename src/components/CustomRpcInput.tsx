@@ -47,7 +47,7 @@ export default function CustomRpcInput({ setUseCustomRpc, customRpc, setCustomRp
                 >
                     {config.chains[chainId].publicJsonRpc} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
                 </Link>{" "}
-                is not working and/or you would prefer to use a different RPC provider to query Ethereum you can enter a custom RPC URL here.
+                is not working and/or you would prefer to use a different RPC provider to query the network you can enter a custom RPC URL here.
             </Text>
             <Text px={1}>
                 Alternative RPC providers:{" "}
@@ -57,12 +57,12 @@ export default function CustomRpcInput({ setUseCustomRpc, customRpc, setCustomRp
                     px={"8px"}
                     borderRadius={"full"}
                     as={NextLink}
-                    href={"https://ethereumnodes.com"}
+                    href={"https://chainlist.org/"}
                     color={"blue"}
                     textDecoration={"underline"}
                     target="_blank"
                 >
-                    https://ethereumnodes.com <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                    https://chainlist.org <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
                 </Link>
             </Text>
             <Input
