@@ -15,6 +15,7 @@ export default function TokenDisplay({ provider, nftId }) {
 
     useEffect(() => {
         let intervalId
+        let lastUpdateTime = Date.now()
 
         const fetchTokenBalance = async () => {
             const abi = ["function balanceOf(address account) view returns (uint256)", "function TOKEN_EMISSION_RATE() view returns (uint256)"]
@@ -32,9 +33,15 @@ export default function TokenDisplay({ provider, nftId }) {
 
                 // Start the interval (20ms) after fetching the initial balance
                 intervalId = setInterval(() => {
+                    const now = Date.now()
+                    const elapsedSeconds = (now - lastUpdateTime) / 1000
+                    lastUpdateTime = now
+
                     // If an nftId exists increment the token balance by 1/50th of the token emission rate
                     // so the token balance increases by the formattedTokenEmissionRate every second
-                    nftId && setTokenBalance((prevBalance) => prevBalance + formattedTokenEmissionRate / 50)
+                    if (nftId) {
+                        setTokenBalance((prevBalance) => prevBalance + formattedTokenEmissionRate * elapsedSeconds)
+                    }
                 }, 20)
             } catch (error) {
                 console.error("Error fetching token balance:", error)
