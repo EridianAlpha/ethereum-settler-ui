@@ -56,6 +56,13 @@ const customTheme = extendTheme({
                         : darkenColor(props.theme.colors.contentBackground.light, 0),
                 border: "4px solid gold",
             },
+            ".errorText": {
+                bg:
+                    props.colorMode === "dark"
+                        ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                        : darkenColor(props.theme.colors.contentBackground.light, 0),
+                border: "4px solid red",
+            },
             ".tooltip": {
                 bg:
                     props.colorMode === "dark"

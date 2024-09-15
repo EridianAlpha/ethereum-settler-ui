@@ -85,12 +85,12 @@ export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTra
                             px={"8px"}
                             borderRadius={"full"}
                             as={NextLink}
-                            href={`${config.chains[chainId].blockExplorerUrl}/${hash}`}
+                            href={`${config.chains[chainId].blockExplorerUrl}/tx/${hash}`}
                             color={"blue"}
                             textDecoration={"underline"}
                             target="_blank"
                         >
-                            explorer <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                            block explorer <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
                         </Link>
                     </Text>
                 ),

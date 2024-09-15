@@ -1,6 +1,7 @@
 import { Text, HStack, Button, Image } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+import { faCopy } from "@fortawesome/free-regular-svg-icons"
 
 import config from "../../public/data/config.json"
 
@@ -31,21 +32,20 @@ export default function CurrentAddressInfo({ setNftId }) {
                     <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
                 </HStack>
             </Button>
-            <Text
-                fontFamily={"monospace"}
-                fontSize={"lg"}
-                className="bgPage"
-                py={1}
-                px={3}
-                borderRadius={"full"}
-                whiteSpace="normal"
-                overflow="visible"
-                textOverflow="clip"
-                wordBreak="break-word"
-                textAlign={"center"}
-            >
-                {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
-            </Text>
+            <HStack className="bgPage" gap={3} py={1} px={3} borderRadius={"full"}>
+                <Text
+                    fontFamily={"monospace"}
+                    fontSize={"lg"}
+                    whiteSpace="normal"
+                    overflow="visible"
+                    textOverflow="clip"
+                    wordBreak="break-word"
+                    textAlign={"center"}
+                >
+                    {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
+                </Text>
+                <FontAwesomeIcon icon={faCopy} />
+            </HStack>
             <Button
                 variant={"WalletButton"}
                 aria-label={"Wallet button"}
@@ -57,9 +57,7 @@ export default function CurrentAddressInfo({ setNftId }) {
                     setNftId(null)
                 }}
             >
-                <HStack gap={3}>
-                    <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
-                </HStack>
+                <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
             </Button>
         </HStack>
     )

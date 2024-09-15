@@ -13,8 +13,8 @@
         "17000": {
             "name": "Holesky 🧪",
             "iconUrl": "./images/EthSolidLogo.svg",
-            "publicJsonRpc": "http://127.0.0.1:8545",
-            "blockExplorerUrl": "https://ethereum-holesky-rpc.publicnode.com",
+            "publicJsonRpc": "https://ethereum-holesky-rpc.publicnode.com",
+            "blockExplorerUrl": "https://holesky.etherscan.io",
             "nftContractAddress": "0x0000000000000000000000000000000000000000",
             "tokenContractAddress": "0x0000000000000000000000000000000000000000"
         },
@@ -23,14 +23,14 @@
             "iconUrl": "./images/BaseLogo.png",
             "publicJsonRpc": "https://base-rpc.publicnode.com",
             "blockExplorerUrl": "https://basescan.org",
-            "nftContractAddress": "0x0000000000000000000000000000000000000000",
+
             "tokenContractAddress": "0x0000000000000000000000000000000000000000"
         },
         "84532": {
             "name": "Base Sepolia 🧪",
             "iconUrl": "./images/BaseLogo.png",
             "publicJsonRpc": "https://base-sepolia-rpc.publicnode.com",
-            "blockExplorerUrl": "https://sepolia.basescan.org/",
+            "blockExplorerUrl": "https://sepolia.basescan.org",
             "nftContractAddress": "0x0000000000000000000000000000000000000000",
             "tokenContractAddress": "0x0000000000000000000000000000000000000000"
         },
