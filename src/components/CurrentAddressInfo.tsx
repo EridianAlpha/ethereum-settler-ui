@@ -26,7 +26,7 @@ export default function CurrentAddressInfo({ setNftId }) {
 
     return (
         <HStack
-            className="currentAddressInfoContainer"
+            className="contentContainer"
             minH={"60px"}
             cursor={"default"}
             px={4}

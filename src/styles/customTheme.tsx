@@ -42,7 +42,7 @@ const customTheme = extendTheme({
                         ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
                         : darkenColor(props.theme.colors.pageBackground.light, 0.05),
             },
-            ".currentAddressInfoContainer": {
+            ".contentContainer": {
                 bg:
                     props.colorMode === "dark"
                         ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)

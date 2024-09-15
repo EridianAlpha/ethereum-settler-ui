@@ -7,6 +7,7 @@ import ConnectWalletButton from "./ConnectWalletButton"
 import MintNftButton from "./MintNftButton"
 import CurrentAddressInfo from "./CurrentAddressInfo"
 import CustomRpcInput from "./CustomRpcInput"
+import About from "./About"
 
 import config from "../../public/data/config.json"
 
@@ -58,6 +59,7 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                     <TokenDisplay provider={provider} nftId={nftId} />
                 </>
             )}
+            <About />
         </VStack>
     )
 }
