@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { Text, HStack, VStack, Button, Image } from "@chakra-ui/react"
+import { Text, HStack, VStack, Button, Image, Box } from "@chakra-ui/react"
 import { BigNumber } from "bignumber.js"
 import { useAccount, useChainId } from "wagmi"
 
@@ -75,14 +75,25 @@ export default function TokenDisplay({ provider, nftId }) {
 
     return (
         <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"500px"} textAlign={"center"}>
-            <HStack flexWrap={"wrap"} justifyContent={"center"}>
-                <Button boxSize={10} onClick={addTokenToMetaMask} borderRadius={"full"}>
-                    <Image minW={"25px"} src="./images/MetaMaskLogo.png" />
+            <HStack w={"100%"} justifyContent={{ base: "space-around", sm: "center" }} position={"relative"}>
+                <HStack gap={1}>
+                    <Text fontWeight={"bold"}>SETTLER</Text>
+                    <Text fontWeight={"bold"} fontFamily={"monospace"} fontSize={"lg"} className="bgPage" px={3} py={1} borderRadius={20}>
+                        {tokenBalance.toFixed(2)}
+                    </Text>
+                </HStack>
+                <Button
+                    onClick={addTokenToMetaMask}
+                    borderRadius={"full"}
+                    h={8}
+                    gap={1}
+                    px={2}
+                    position={{ base: "relative", sm: "absolute" }}
+                    right={0}
+                >
+                    <Text>Add to </Text>
+                    <Image w={"20px"} src="./images/MetaMaskLogo.png" />
                 </Button>
-                <Text fontWeight={"bold"}>SETTLER</Text>
-                <Text fontWeight={"bold"} fontFamily={"monospace"} fontSize={"lg"} className="bgPage" px={3} py={1} borderRadius={20}>
-                    {tokenBalance.toFixed(2)}
-                </Text>
             </HStack>
             <Text>Earn {tokenEmissionRate} SETTLER per second by holding a SETTLEMENT NFT</Text>
         </VStack>
