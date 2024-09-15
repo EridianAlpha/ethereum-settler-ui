@@ -102,7 +102,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
     // If the tokenData is fetched, display the NFT metadata
     if (tokenData)
         return (
-            <VStack w={"100%"} alignItems={"center"} pb={5} gap={0}>
+            <VStack w={"100%"} alignItems={"center"} gap={0}>
                 <VStack
                     maxW={"500px"}
                     w={"100%"}

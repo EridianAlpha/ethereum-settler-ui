@@ -10,7 +10,7 @@ import { faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 
 import config from "../../public/data/config.json"
 
-export default function MintNftButton({ provider, nftId, setIsMintTransactionConfirmed, setTransactionHash }) {
+export default function MintNftButton({ provider, nftId, setIsMintTransactionConfirmed }) {
     const [transactionState, setTransactionState] = useState({
         isWaitingForSignature: false,
         isConfirming: false,
@@ -80,7 +80,6 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
         if (isConfirming && !transactionState?.isConfirming) {
             console.log("Transaction is confirming...")
             setTransactionState({ ...transactionState, error: null, hash: hash, isWaitingForSignature: false, isConfirming: true })
-            setTransactionHash(hash)
         }
         if (isConfirmed && !transactionState?.isConfirmed) {
             console.log("Transaction confirmed: ", hash)

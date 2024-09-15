@@ -16,7 +16,6 @@ export default function ContentContainer({ customRpc }) {
     const [nftId, setNftId] = useState(null)
     const [provider, setProvider] = useState(null)
     const [isMintTransactionConfirmed, setIsMintTransactionConfirmed] = useState(false)
-    const [transactionHash, setTransactionHash] = useState("")
 
     const { address: connectedWalletAddress, isConnected } = useAccount()
 
@@ -29,12 +28,7 @@ export default function ContentContainer({ customRpc }) {
         <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
             {isConnected ? <CurrentAddressInfo setNftId={setNftId} /> : <ConnectWalletButton />}
             {!nftId && (
-                <MintNftButton
-                    provider={isConnected ? provider : null}
-                    nftId={nftId}
-                    setIsMintTransactionConfirmed={setIsMintTransactionConfirmed}
-                    setTransactionHash={setTransactionHash}
-                />
+                <MintNftButton provider={isConnected ? provider : null} nftId={nftId} setIsMintTransactionConfirmed={setIsMintTransactionConfirmed} />
             )}
             {connectedWalletAddress && (
                 <>

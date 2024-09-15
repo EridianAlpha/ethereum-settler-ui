@@ -1,10 +1,9 @@
-import { VStack, Text, HStack, Button } from "@chakra-ui/react"
+import { Text, HStack, Button } from "@chakra-ui/react"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faRightFromBracket, faWallet } from "@fortawesome/free-solid-svg-icons"
 
 import { useAccount, useDisconnect, useBalance } from "wagmi"
-import { useEffect } from "react"
 
 import { BigNumber } from "bignumber.js"
 
