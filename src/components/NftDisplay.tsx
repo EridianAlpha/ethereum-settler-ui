@@ -10,7 +10,7 @@ import config from "../../public/data/config.json"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
-export default function NftDisplay({ provider, nftId, setNftId, isMintTransactionConfirmed, isContractDeployed, setIsContractDeployed }) {
+export default function NftDisplay({ provider, nftId, setNftId, isMintTransactionConfirmed }) {
     const [tokenData, setTokenData] = useState(null)
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
@@ -56,8 +56,6 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                 // Create a contract instance
                 const contract = new ethers.Contract(config.chains[chainId].nftContractAddress, abi, provider)
 
-                console.log("Contract:", contract)
-
                 // Fetch the tokenURI for the connected wallet address
                 const nftId = await contract.getOwnerToId(connectedWalletAddress)
                 setNftId(nftId)
@@ -100,15 +98,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
             }
         }
 
-        // If the contract address is not the zero address, fetch the NFT URI
-        if (config.chains[chainId].nftContractAddress && config.chains[chainId].nftContractAddress != "0x0000000000000000000000000000000000000000") {
-            setIsContractDeployed(true)
-            fetchNftUri()
-        } else {
-            setIsContractDeployed(false)
-            setTokenData(null)
-            setNftId(null)
-        }
+        fetchNftUri()
     }, [provider, isMintTransactionConfirmed, chainId])
 
     // If the tokenData is fetched, display the NFT metadata
@@ -194,7 +184,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
         )
 
     // If the tokenData is not yet fetched, display a loading message
-    if (isContractDeployed && nftId === null) {
+    if (nftId === null) {
         return (
             <VStack w={"100%"} maxW={"100%"} alignItems={"center"} pb={5} gap={5}>
                 <Text>Fetching NFT data...</Text>

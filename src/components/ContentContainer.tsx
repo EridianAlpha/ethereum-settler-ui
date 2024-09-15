@@ -12,14 +12,13 @@ import config from "../../public/data/config.json"
 
 import { ethers } from "ethers"
 import { useAccount, useChainId } from "wagmi"
-import { borderRadius } from "polished"
 
 export default function ContentContainer({ wagmiProviderConfig, customRpc, setCustomRpc, useCustomRpc, setUseCustomRpc }) {
     const chainId = useChainId()
     const [nftId, setNftId] = useState(null)
     const [provider, setProvider] = useState(new ethers.JsonRpcProvider(customRpc ? customRpc : config.chains[chainId].publicJsonRpc))
     const [isMintTransactionConfirmed, setIsMintTransactionConfirmed] = useState(false)
-    const [isContractDeployed, setIsContractDeployed] = useState(true)
+    const [isContractDeployed, setIsContractDeployed] = useState(false)
 
     const { address: connectedWalletAddress, isConnected } = useAccount()
 
@@ -27,6 +26,15 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
     useEffect(() => {
         setProvider(new ethers.JsonRpcProvider(customRpc ? customRpc : config.chains[chainId].publicJsonRpc))
     }, [customRpc, chainId])
+
+    // UseEffect - Check if contract is deployed on selected network
+    useEffect(() => {
+        setIsContractDeployed(
+            config.chains[chainId].nftContractAddress && config.chains[chainId].nftContractAddress != "0x0000000000000000000000000000000000000000"
+                ? true
+                : false
+        )
+    }, [chainId])
 
     return (
         <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
@@ -44,17 +52,10 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                     setIsMintTransactionConfirmed={setIsMintTransactionConfirmed}
                 />
             )}
-            {connectedWalletAddress && (
+            {isContractDeployed && connectedWalletAddress && (
                 <>
-                    <NftDisplay
-                        provider={provider}
-                        nftId={nftId}
-                        setNftId={setNftId}
-                        isMintTransactionConfirmed={isMintTransactionConfirmed}
-                        isContractDeployed={isContractDeployed}
-                        setIsContractDeployed={setIsContractDeployed}
-                    />
-                    {isContractDeployed && <TokenDisplay provider={provider} nftId={nftId} />}
+                    <NftDisplay provider={provider} nftId={nftId} setNftId={setNftId} isMintTransactionConfirmed={isMintTransactionConfirmed} />
+                    <TokenDisplay provider={provider} nftId={nftId} />
                 </>
             )}
         </VStack>

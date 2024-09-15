@@ -41,15 +41,7 @@ export default function TokenDisplay({ provider, nftId }) {
             }
         }
 
-        // Fetch the initial balance
-        if (
-            config.chains[chainId].tokenContractAddress &&
-            config.chains[chainId].tokenContractAddress != "0x0000000000000000000000000000000000000000"
-        ) {
-            fetchTokenBalance()
-        } else {
-            setTokenBalance(0)
-        }
+        fetchTokenBalance()
 
         // Cleanup the interval on component unmount
         return () => clearInterval(intervalId)
