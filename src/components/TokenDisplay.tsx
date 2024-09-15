@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { Text } from "@chakra-ui/react"
+import { Text, HStack, VStack, Button, Image } from "@chakra-ui/react"
 import { BigNumber } from "bignumber.js"
 import { useAccount } from "wagmi"
 
@@ -8,6 +8,7 @@ import config from "../../public/data/config.json"
 
 export default function TokenDisplay({ provider, nftId }) {
     const [tokenBalance, setTokenBalance] = useState(0)
+    const [tokenEmissionRate, setTokenEmissionRate] = useState(0)
 
     const { address: connectedWalletAddress } = useAccount()
 
@@ -15,23 +16,25 @@ export default function TokenDisplay({ provider, nftId }) {
         let intervalId
 
         const fetchTokenBalance = async () => {
-            const abi = ["function balanceOf(address account) view returns (uint256)"]
+            const abi = ["function balanceOf(address account) view returns (uint256)", "function TOKEN_EMISSION_RATE() view returns (uint256)"]
             const contract = new ethers.Contract(config.tokenContractAddress, abi, provider)
 
             try {
                 const balance = await contract.balanceOf(connectedWalletAddress)
                 const formattedBalance = Number(new BigNumber(balance).shiftedBy(-18))
 
-                // Set the initial token balance
+                const tokenEmissionRate = await contract.TOKEN_EMISSION_RATE()
+                const formattedTokenEmissionRate = Number(new BigNumber(tokenEmissionRate).shiftedBy(-18))
+
                 setTokenBalance(formattedBalance)
+                setTokenEmissionRate(formattedTokenEmissionRate)
 
-                // Start the interval after fetching the initial balance
+                // Start the interval (20ms) after fetching the initial balance
                 intervalId = setInterval(() => {
-                    // TODO: Update this increment to be the value of TOKEN_EMISSION_RATE shifted by -18 from the contract
-
-                    // If an nftId exists increment the token balance
-                    nftId && setTokenBalance((prevBalance) => prevBalance + 1)
-                }, 1000)
+                    // If an nftId exists increment the token balance by 1/50th of the token emission rate
+                    // so the token balance increases by the formattedTokenEmissionRate every second
+                    nftId && setTokenBalance((prevBalance) => prevBalance + formattedTokenEmissionRate / 50)
+                }, 20)
             } catch (error) {
                 console.error("Error fetching token balance:", error)
             }
@@ -44,5 +47,44 @@ export default function TokenDisplay({ provider, nftId }) {
         return () => clearInterval(intervalId)
     }, [provider, connectedWalletAddress, nftId])
 
-    return <Text>Token Balance: {tokenBalance}</Text>
+    const addTokenToMetaMask = async () => {
+        const tokenAddress = config.tokenContractAddress
+        const tokenSymbol = "SETTLER"
+        const tokenDecimals = 18
+        const tokenImage = config.nftIpfsUrl
+
+        try {
+            if (window.ethereum) {
+                await window.ethereum.request({
+                    method: "wallet_watchAsset",
+                    params: {
+                        type: "ERC20",
+                        options: {
+                            address: tokenAddress,
+                            symbol: tokenSymbol,
+                            decimals: tokenDecimals,
+                            image: tokenImage,
+                        },
+                    },
+                })
+            }
+        } catch (error) {
+            console.error("Error adding token to MetaMask:", error)
+        }
+    }
+
+    return (
+        <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"500px"} textAlign={"center"}>
+            <HStack flexWrap={"wrap"} justifyContent={"center"}>
+                <Button boxSize={10} onClick={addTokenToMetaMask} borderRadius={"full"}>
+                    <Image minW={"25px"} src="./images/MetaMaskLogo.png" />
+                </Button>
+                <Text fontWeight={"bold"}>SETTLER</Text>
+                <Text fontWeight={"bold"} fontFamily={"monospace"} fontSize={"lg"} className="bgPage" px={3} py={1} borderRadius={20}>
+                    {tokenBalance.toFixed(2)}
+                </Text>
+            </HStack>
+            <Text>Earn {tokenEmissionRate} SETTLER per second by holding a SETTLEMENT NFT</Text>
+        </VStack>
+    )
 }

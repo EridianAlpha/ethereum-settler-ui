@@ -49,6 +49,13 @@ const customTheme = extendTheme({
                         : darkenColor(props.theme.colors.contentBackground.light, 0),
                 border: "4px solid green",
             },
+            ".tokenBalanceContainer": {
+                bg:
+                    props.colorMode === "dark"
+                        ? lightenColor(props.theme.colors.pageBackground.dark, 0.05)
+                        : darkenColor(props.theme.colors.contentBackground.light, 0),
+                border: "4px solid gold",
+            },
             ".tooltip": {
                 bg:
                     props.colorMode === "dark"
