@@ -1,23 +1,17 @@
-import { Text, HStack, Button } from "@chakra-ui/react"
-
+import { Text, HStack, Button, Image } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faRightFromBracket, faWallet } from "@fortawesome/free-solid-svg-icons"
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
 
-import { useAccount, useDisconnect, useBalance } from "wagmi"
+import config from "../../public/data/config.json"
 
-import { BigNumber } from "bignumber.js"
+import { useChainModal } from "@rainbow-me/rainbowkit"
+import { useChainId, useAccount, useDisconnect } from "wagmi"
 
 export default function CurrentAddressInfo({ setNftId }) {
     const { address: connectedWalletAddress } = useAccount()
     const { disconnect } = useDisconnect()
-
-    const {
-        data: balanceData,
-        isError: balanceIsError,
-        isLoading: balanceIsLoading,
-    } = useBalance({
-        address: connectedWalletAddress,
-    })
+    const { openChainModal } = useChainModal()
+    const chainId = useChainId()
 
     return (
         <HStack
@@ -31,6 +25,12 @@ export default function CurrentAddressInfo({ setNftId }) {
             flexWrap={"wrap"}
             justifyContent={"center"}
         >
+            <Button h={"100%"} borderRadius={"full"} onClick={openChainModal} pl={0} pr={2}>
+                <HStack>
+                    <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} />
+                    <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
+                </HStack>
+            </Button>
             <Text
                 fontFamily={"monospace"}
                 fontSize={"lg"}
@@ -44,17 +44,13 @@ export default function CurrentAddressInfo({ setNftId }) {
                 wordBreak="break-word"
                 textAlign={"center"}
             >
-                <FontAwesomeIcon icon={faWallet} size={"lg"} />{" "}
                 {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
-            </Text>
-            <Text fontWeight={"bold"} fontSize={"lg"}>
-                {Number(new BigNumber(balanceData?.value.toString()).shiftedBy(-18)).toFixed(4)} ETH
             </Text>
             <Button
                 variant={"WalletButton"}
                 aria-label={"Wallet button"}
                 borderRadius={"full"}
-                px={3}
+                px={0}
                 h={8}
                 onClick={() => {
                     disconnect()

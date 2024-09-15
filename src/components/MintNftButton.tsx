@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
 import { VStack, Text, Box, Image, Button, Spinner, Link, useToast } from "@chakra-ui/react"
-import { mainnet } from "wagmi/chains"
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-import { http, createConfig } from "@wagmi/core"
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId } from "wagmi"
 import NextLink from "next/link"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -10,7 +8,7 @@ import { faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 
 import config from "../../public/data/config.json"
 
-export default function MintNftButton({ provider, nftId, setIsMintTransactionConfirmed }) {
+export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTransactionConfirmed }) {
     const [transactionState, setTransactionState] = useState({
         isWaitingForSignature: false,
         isConfirming: false,
@@ -19,24 +17,17 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
         error: null,
     })
 
+    const chainId = useChainId()
     const { address: connectedWalletAddress } = useAccount()
     const { data: hash, error, writeContract } = useWriteContract()
 
     // Create a toast to display transaction status notifications
     const toast = useToast()
 
-    // Create a config object for the transaction
-    const txConfig = createConfig({
-        chains: [mainnet],
-        transports: {
-            [mainnet.id]: http(provider?._getConnection().url),
-        },
-    })
-
     // Use the useWaitForTransactionReceipt hook to check the status of the transaction
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
         hash: hash,
-        config: txConfig,
+        config: wagmiProviderConfig,
     })
 
     const handleTransaction = async () => {
@@ -55,11 +46,11 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
             setTransactionState({ ...transactionState, error: null, isWaitingForSignature: true })
 
             const txObject = {
-                address: config.nftContractAddress as `0x${string}`,
+                address: config.chains[chainId].nftContractAddress as `0x${string}`,
                 abi: abi,
                 functionName: "mint",
                 args: [],
-                chain: mainnet,
+                chain: wagmiProviderConfig,
                 account: connectedWalletAddress as `0x${string}`,
             }
 
@@ -94,12 +85,12 @@ export default function MintNftButton({ provider, nftId, setIsMintTransactionCon
                             px={"8px"}
                             borderRadius={"full"}
                             as={NextLink}
-                            href={`https://etherscan.io/tx/${hash}`}
+                            href={`${config.chains[chainId].blockExplorerUrl}/${hash}`}
                             color={"blue"}
                             textDecoration={"underline"}
                             target="_blank"
                         >
-                            Etherscan <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                            explorer <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
                         </Link>
                     </Text>
                 ),

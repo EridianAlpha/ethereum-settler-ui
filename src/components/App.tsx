@@ -12,12 +12,17 @@ import "@rainbow-me/rainbowkit/styles.css"
 
 import { getDefaultConfig, darkTheme, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit"
 import { http, createConfig, WagmiProvider } from "wagmi"
-import { mainnet as wagmiMainnet } from "wagmi/chains"
+import {
+    mainnet as wagmiEthMainnet,
+    holesky as wagmiEthHolesky,
+    base as wagmiBaseMainnet,
+    anvil as wagmiAnvil,
+    baseSepolia as wagmiBaseSepolia,
+} from "wagmi/chains"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 
 const App = () => {
     const colorMode = useColorModeValue("light", "dark")
-
     const [useCustomRpc, setUseCustomRpc] = useState(false)
     const [customRpc, setCustomRpc] = useState("")
     const [isValidWalletConnectId, setIsValidWalletConnectId] = useState(false)
@@ -25,20 +30,40 @@ const App = () => {
 
     // Helper function to create default config, wrapped in useCallback
     const createWagmiProviderConfig = useCallback(() => {
-        const commonChainsConfig = {
-            ...wagmiMainnet,
+        const customChainConfig = (chain) => ({
+            ...chain,
+            name: config.chains[chain.id].name,
             rpcUrls: {
                 default: {
-                    http: [customRpc || config.publicJsonRpc],
+                    http: [customRpc || config.chains[chain.id].publicJsonRpc],
                 },
             },
+        })
+
+        const customChains: any = [
+            customChainConfig(wagmiEthMainnet),
+            customChainConfig(wagmiBaseMainnet),
+            customChainConfig(wagmiEthHolesky),
+            customChainConfig(wagmiBaseSepolia),
+        ]
+
+        // Custom Transports
+        const customTransports = {
+            [wagmiEthMainnet.id]: http(customRpc || config.chains[wagmiEthMainnet.id].publicJsonRpc),
+            [wagmiBaseMainnet.id]: http(customRpc || config.chains[wagmiBaseMainnet.id].publicJsonRpc),
+            [wagmiEthHolesky.id]: http(customRpc || config.chains[wagmiEthHolesky.id].publicJsonRpc),
+            [wagmiBaseSepolia.id]: http(customRpc || config.chains[wagmiBaseSepolia.id].publicJsonRpc),
+        }
+
+        // Add Anvil chain if DEV_MODE_FLAG is set
+        if (process.env.NEXT_PUBLIC_DEV_MODE_FLAG === "true") {
+            customChains.push(customChainConfig(wagmiAnvil))
+            customTransports[wagmiAnvil.id] = http(customRpc || config.chains[wagmiAnvil.id].publicJsonRpc)
         }
 
         const fallbackConfig = createConfig({
-            chains: [commonChainsConfig],
-            transports: {
-                [wagmiMainnet.id]: http(customRpc || config.publicJsonRpc),
-            },
+            chains: customChains,
+            transports: customTransports,
         })
 
         if (config.walletconnectId) {
@@ -51,7 +76,7 @@ const App = () => {
                     getDefaultConfig({
                         appName: "Ethereum Settler",
                         projectId: config.walletconnectId,
-                        chains: [commonChainsConfig],
+                        chains: customChains,
                         ssr: true,
                     })
                 )
@@ -119,7 +144,7 @@ const App = () => {
                         <WagmiProvider config={wagmiProviderConfig}>
                             <QueryClientProvider client={queryClient}>
                                 <RainbowKitProvider modalSize="compact" theme={colorMode === "dark" ? darkTheme() : lightTheme()}>
-                                    <ContentContainer customRpc={customRpc} />
+                                    <ContentContainer wagmiProviderConfig={wagmiProviderConfig} customRpc={customRpc} />
                                 </RainbowKitProvider>
                             </QueryClientProvider>
                         </WagmiProvider>

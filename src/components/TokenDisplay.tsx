@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { Text, HStack, VStack, Button, Image } from "@chakra-ui/react"
 import { BigNumber } from "bignumber.js"
-import { useAccount } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 
 import config from "../../public/data/config.json"
 
@@ -11,13 +11,14 @@ export default function TokenDisplay({ provider, nftId }) {
     const [tokenEmissionRate, setTokenEmissionRate] = useState(0)
 
     const { address: connectedWalletAddress } = useAccount()
+    const chainId = useChainId()
 
     useEffect(() => {
         let intervalId
 
         const fetchTokenBalance = async () => {
             const abi = ["function balanceOf(address account) view returns (uint256)", "function TOKEN_EMISSION_RATE() view returns (uint256)"]
-            const contract = new ethers.Contract(config.tokenContractAddress, abi, provider)
+            const contract = new ethers.Contract(config.chains[chainId].tokenContractAddress, abi, provider)
 
             try {
                 const balance = await contract.balanceOf(connectedWalletAddress)
@@ -48,7 +49,7 @@ export default function TokenDisplay({ provider, nftId }) {
     }, [provider, connectedWalletAddress, nftId])
 
     const addTokenToMetaMask = async () => {
-        const tokenAddress = config.tokenContractAddress
+        const tokenAddress = config.chains[chainId].tokenContractAddress
         const tokenSymbol = "SETTLER"
         const tokenDecimals = 18
         const tokenImage = config.nftIpfsUrl

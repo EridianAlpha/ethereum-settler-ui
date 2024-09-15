@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 import { VStack, HStack, Text, Box, Link } from "@chakra-ui/react"
 import NextLink from "next/link"
 
-import { useAccount } from "wagmi"
+import { useChainId, useAccount } from "wagmi"
 
 import config from "../../public/data/config.json"
 
@@ -15,6 +15,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
     const [svgContent, setSvgContent] = useState("")
     const [isViewNftMetadataExpanded, setIsViewNftMetadataExpanded] = useState(false)
 
+    const chainId = useChainId()
     const { address: connectedWalletAddress } = useAccount()
 
     const getFormattedDate = () => {
@@ -53,7 +54,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                 ]
 
                 // Create a contract instance
-                const contract = new ethers.Contract(config.nftContractAddress, abi, provider)
+                const contract = new ethers.Contract(config.chains[chainId].nftContractAddress, abi, provider)
 
                 // Fetch the tokenURI for the connected wallet address
                 const nftId = await contract.getOwnerToId(connectedWalletAddress)

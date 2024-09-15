@@ -10,25 +10,30 @@ import CurrentAddressInfo from "./CurrentAddressInfo"
 import config from "../../public/data/config.json"
 
 import { ethers } from "ethers"
-import { useAccount } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 
-export default function ContentContainer({ customRpc }) {
+export default function ContentContainer({ wagmiProviderConfig, customRpc }) {
     const [nftId, setNftId] = useState(null)
     const [provider, setProvider] = useState(null)
     const [isMintTransactionConfirmed, setIsMintTransactionConfirmed] = useState(false)
 
     const { address: connectedWalletAddress, isConnected } = useAccount()
+    const chainId = useChainId()
 
     // UseEffect - Set JSON RPC provider
     useEffect(() => {
-        setProvider(new ethers.JsonRpcProvider(customRpc ? customRpc : config.publicJsonRpc))
-    }, [customRpc])
+        setProvider(new ethers.JsonRpcProvider(customRpc ? customRpc : config.chains[chainId].publicJsonRpc))
+    }, [customRpc, chainId])
 
     return (
         <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
             {isConnected ? <CurrentAddressInfo setNftId={setNftId} /> : <ConnectWalletButton />}
             {!nftId && (
-                <MintNftButton provider={isConnected ? provider : null} nftId={nftId} setIsMintTransactionConfirmed={setIsMintTransactionConfirmed} />
+                <MintNftButton
+                    wagmiProviderConfig={wagmiProviderConfig}
+                    nftId={nftId}
+                    setIsMintTransactionConfirmed={setIsMintTransactionConfirmed}
+                />
             )}
             {connectedWalletAddress && (
                 <>
