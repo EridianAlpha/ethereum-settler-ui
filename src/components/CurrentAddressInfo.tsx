@@ -1,7 +1,8 @@
-import { Text, HStack, Button, Image } from "@chakra-ui/react"
+import { useState } from "react"
+import { Text, HStack, VStack, Button, Image, Box, Tooltip } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
-import { faCopy } from "@fortawesome/free-regular-svg-icons"
+import { faCopy, faCircleCheck } from "@fortawesome/free-regular-svg-icons"
 
 import config from "../../public/data/config.json"
 
@@ -13,6 +14,15 @@ export default function CurrentAddressInfo({ setNftId }) {
     const { disconnect } = useDisconnect()
     const { openChainModal } = useChainModal()
     const chainId = useChainId()
+
+    const [copied, setCopied] = useState(false)
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(connectedWalletAddress).then(() => {
+            setCopied(true)
+            setTimeout(() => setCopied(false), 1000)
+        })
+    }
 
     return (
         <HStack
@@ -32,7 +42,7 @@ export default function CurrentAddressInfo({ setNftId }) {
                     <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
                 </HStack>
             </Button>
-            <HStack className="bgPage" gap={3} py={1} px={3} borderRadius={"full"}>
+            <HStack className="bgPage" gap={3} py={1} px={3} borderRadius={"full"} onClick={handleCopy} cursor="pointer">
                 <Text
                     fontFamily={"monospace"}
                     fontSize={"lg"}
@@ -44,21 +54,56 @@ export default function CurrentAddressInfo({ setNftId }) {
                 >
                     {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
                 </Text>
-                <FontAwesomeIcon icon={faCopy} />
+                <Tooltip
+                    className="tooltip"
+                    closeOnClick={false}
+                    gutter={6}
+                    label={
+                        <VStack className="tooltipLabel">
+                            <Text fontWeight={"bold"}>Address copied!</Text>
+                        </VStack>
+                    }
+                    placement={"bottom"}
+                    borderRadius={"full"}
+                    hasArrow={true}
+                    closeDelay={0}
+                    openDelay={0}
+                    isOpen={copied}
+                >
+                    <Box w={3}>
+                        <FontAwesomeIcon icon={copied ? faCircleCheck : faCopy} />
+                    </Box>
+                </Tooltip>
             </HStack>
-            <Button
-                variant={"WalletButton"}
-                aria-label={"Wallet button"}
+            <Tooltip
+                className="tooltip"
+                closeOnClick={false}
+                gutter={8}
+                label={
+                    <VStack className="tooltipLabel">
+                        <Text fontWeight={"bold"}>Disconnect wallet</Text>
+                    </VStack>
+                }
+                placement={"bottom"}
                 borderRadius={"full"}
-                px={0}
-                h={8}
-                onClick={() => {
-                    disconnect()
-                    setNftId(null)
-                }}
+                hasArrow={true}
+                closeDelay={0}
+                openDelay={0}
             >
-                <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
-            </Button>
+                <Button
+                    variant={"WalletButton"}
+                    aria-label={"Wallet button"}
+                    borderRadius={"full"}
+                    px={0}
+                    h={8}
+                    onClick={() => {
+                        disconnect()
+                        setNftId(null)
+                    }}
+                >
+                    <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
+                </Button>
+            </Tooltip>
         </HStack>
     )
 }
