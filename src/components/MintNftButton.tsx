@@ -9,6 +9,7 @@ import { faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 import config from "../../public/data/config.json"
 
 export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTransactionConfirmed }) {
+    const [isImageLoaded, setIsImageLoaded] = useState(false)
     const [transactionState, setTransactionState] = useState({
         isWaitingForSignature: false,
         isConfirming: false,
@@ -135,44 +136,52 @@ export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTra
 
     return (
         <Box position="relative" maxW={"500px"} w={"100%"}>
-            <Image src={config.nftIpfsUrl} alt="Unminted NFT Image" borderRadius={"20px"} filter="grayscale(100%) brightness(30%)" />
-            <Button
-                position="absolute"
-                transform="translate(-50%, -50%)"
-                top={{ base: "40%", sm: "35%" }}
-                left="50%"
-                minH="150px"
-                minW="150px"
-                p={0}
-                variant={nftId !== null ? "RainbowButton" : "MintNftDisabledButton"}
-                className={nftId !== null ? "rainbowButtonAnimationOffset" : null}
-                fontSize="2xl"
-                borderRadius="full"
-                whiteSpace="normal"
-                textAlign="center"
-                fontWeight={"extrabold"}
-                filter={nftId !== null ? null : "grayscale(100%) brightness(100%)"}
-                border={nftId !== null ? null : "2px solid"}
-                color={"white"}
-                textShadow={"0px 0px 5px black"}
-                onClick={nftId === null || transactionState.isWaitingForSignature || transactionState.isConfirming ? null : handleTransaction}
-                pointerEvents={nftId === null || transactionState.isWaitingForSignature || transactionState.isConfirming ? "none" : "auto"}
-            >
-                {transactionState.isWaitingForSignature && (
-                    <VStack gap={0}>
-                        <Text pt={5}>Sign tx in</Text>
-                        <Text pb={4}>your wallet</Text>
-                        <Spinner size={"lg"} speed="0.8s" />
-                    </VStack>
-                )}
-                {transactionState.isConfirming && (
-                    <VStack gap={4} pt={12}>
-                        <Text>Confirming</Text>
-                        <Spinner size={"lg"} speed="0.8s" />
-                    </VStack>
-                )}
-                {!transactionState.isWaitingForSignature && !transactionState.isConfirming && <Text>Mint NFT</Text>}
-            </Button>
+            <Image
+                src={config.nftIpfsUrl}
+                alt="Unminted NFT Image"
+                borderRadius={"20px"}
+                filter="grayscale(100%) brightness(30%)"
+                onLoad={() => setIsImageLoaded(true)}
+            />
+            {isImageLoaded && (
+                <Button
+                    position="absolute"
+                    transform="translate(-50%, -50%)"
+                    top={{ base: "40%", sm: "35%" }}
+                    left="50%"
+                    minH="150px"
+                    minW="150px"
+                    p={0}
+                    variant={nftId !== null ? "RainbowButton" : "MintNftDisabledButton"}
+                    className={nftId !== null ? "rainbowButtonAnimationOffset" : null}
+                    fontSize="2xl"
+                    borderRadius="full"
+                    whiteSpace="normal"
+                    textAlign="center"
+                    fontWeight={"extrabold"}
+                    filter={nftId !== null ? null : "grayscale(100%) brightness(100%)"}
+                    border={nftId !== null ? null : "2px solid"}
+                    color={"white"}
+                    textShadow={"0px 0px 5px black"}
+                    onClick={nftId === null || transactionState.isWaitingForSignature || transactionState.isConfirming ? null : handleTransaction}
+                    pointerEvents={nftId === null || transactionState.isWaitingForSignature || transactionState.isConfirming ? "none" : "auto"}
+                >
+                    {transactionState.isWaitingForSignature && (
+                        <VStack gap={0}>
+                            <Text pt={5}>Sign tx in</Text>
+                            <Text pb={4}>your wallet</Text>
+                            <Spinner size={"lg"} speed="0.8s" />
+                        </VStack>
+                    )}
+                    {transactionState.isConfirming && (
+                        <VStack gap={4} pt={12}>
+                            <Text>Confirming</Text>
+                            <Spinner size={"lg"} speed="0.8s" />
+                        </VStack>
+                    )}
+                    {!transactionState.isWaitingForSignature && !transactionState.isConfirming && <Text>Mint NFT</Text>}
+                </Button>
+            )}
         </Box>
     )
 }
