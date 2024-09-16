@@ -13,6 +13,8 @@ export default function TokenDisplay({ provider, nftId }) {
     const { address: connectedWalletAddress } = useAccount()
     const chainId = useChainId()
 
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
     useEffect(() => {
         let intervalId
         let lastUpdateTime = Date.now()
@@ -97,6 +99,7 @@ export default function TokenDisplay({ provider, nftId }) {
                     px={2}
                     position={{ base: "relative", sm: "absolute" }}
                     right={0}
+                    display={isMobile ? "none" : "inherit"}
                 >
                     <Text>Add to </Text>
                     <Image w={"20px"} src="./images/MetaMaskLogo.png" />
