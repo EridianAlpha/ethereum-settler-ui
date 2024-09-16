@@ -23,7 +23,7 @@
             "iconUrl": "./images/BaseLogo.png",
             "publicJsonRpc": "https://base-rpc.publicnode.com",
             "blockExplorerUrl": "https://basescan.org",
-
+            "nftContractAddress": "0x0000000000000000000000000000000000000000",
             "tokenContractAddress": "0x0000000000000000000000000000000000000000"
         },
         "84532": {
