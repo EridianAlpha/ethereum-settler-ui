@@ -15,8 +15,8 @@
             "iconUrl": "./images/EthSolidLogo.svg",
             "publicJsonRpc": "https://ethereum-holesky-rpc.publicnode.com",
             "blockExplorerUrl": "https://holesky.etherscan.io",
-            "nftContractAddress": "0x0000000000000000000000000000000000000000",
-            "tokenContractAddress": "0x0000000000000000000000000000000000000000"
+            "nftContractAddress": "0xeE6704F8B34f3Ee47259b9564E011143891296cF",
+            "tokenContractAddress": "0x1fCDA7c74f7D450e563a892A6FADBF630eC32536"
         },
         "8453": {
             "name": "Base",
