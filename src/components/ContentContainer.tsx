@@ -35,18 +35,19 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                 ? true
                 : false
         )
+        setNftId(null)
     }, [chainId])
 
     return (
         <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
             {useCustomRpc && <CustomRpcInput setUseCustomRpc={setUseCustomRpc} customRpc={customRpc} setCustomRpc={setCustomRpc} />}
             {isConnected ? <CurrentAddressInfo setNftId={setNftId} /> : <ConnectWalletButton />}
-            {!isContractDeployed && (
-                <Text className={"errorText"} borderRadius={"20px"} px={2} py={1}>
-                    Contract not deployed on selected network
+            {isConnected && !isContractDeployed && (
+                <Text className={"errorText"} borderRadius={"20px"} px={2} py={1} textAlign={"center"}>
+                    Contract not yet deployed on the {config.chains[chainId].name} network
                 </Text>
             )}
-            {isContractDeployed && !nftId && (
+            {(!isConnected || !nftId) && (
                 <MintNftButton
                     wagmiProviderConfig={wagmiProviderConfig}
                     nftId={nftId}
