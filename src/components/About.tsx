@@ -29,18 +29,7 @@ export default function About() {
     }
 
     return (
-        <VStack
-            id="about"
-            className={"contentContainer"}
-            py={3}
-            px={5}
-            pb={5}
-            borderRadius={"20px"}
-            maxW={"700px"}
-            gap={5}
-            mt={5}
-            textAlign={"justify"}
-        >
+        <VStack id="about" className={"contentContainer"} py={3} px={5} pb={5} borderRadius={"20px"} maxW={"700px"} gap={5} textAlign={"justify"}>
             <VStack>
                 <SubHeading>About Ethereum Settlers</SubHeading>
                 <Text>
