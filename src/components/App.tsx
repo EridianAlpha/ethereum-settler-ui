@@ -73,7 +73,7 @@ const App = () => {
                 // exists and is valid or else it will throw an error
                 setWagmiProviderConfig(
                     getDefaultConfig({
-                        appName: "Ethereum Settler",
+                        appName: "Ethereum Settlers",
                         projectId: config.walletconnectId,
                         chains: customChains,
                         ssr: true,

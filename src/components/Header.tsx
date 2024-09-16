@@ -132,7 +132,7 @@ export default function Header({ useCustomRpc, setUseCustomRpc }) {
                                 🏕️
                             </Text>
                             <Box pr={2} minW={"fit-content"} fontWeight="extrabold" fontSize="xl" whiteSpace="nowrap" overflow="hidden">
-                                Ethereum Settler
+                                Ethereum Settlers
                             </Box>
                         </HStack>
                         <HStack display={{ base: "none", lg: "flex" }} spacing={5}>

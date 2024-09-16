@@ -1,13 +1,13 @@
-# Ethereum Settler UI
+# Ethereum Settlers UI
 
-This is the UI for the Ethereum Settler project. Built using Next.js and ChakraUI.
+This is the UI for the Ethereum Settlers project. Built using Next.js and ChakraUI.
 
 ## Installation
 
 ### Clone repository
 
 ```bash
-git clone https://github.com/EridianAlpha/ethereum-settler-ui.git
+git clone https://github.com/EridianAlpha/ethereum-settlers-ui.git
 ```
 
 ### Install Dependencies
