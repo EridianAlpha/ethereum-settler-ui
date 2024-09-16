@@ -1,6 +1,8 @@
 # Ethereum Settlers UI
 
-This is the UI for the Ethereum Settlers project. Built using Next.js and ChakraUI.
+The UI for the [Ethereum Settlers ↗](https://settlers.eridian.xyz/#about) project.
+
+Built using Next.js, Chakra UI, Wagmi, RainbowKit and Ethers.
 
 ## Installation
 
