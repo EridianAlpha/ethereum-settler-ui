@@ -1,6 +1,6 @@
-import { VStack, HStack, Text, Input, Button, Link } from "@chakra-ui/react"
+import { VStack, Text, Link } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
+import { faSatelliteDish, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 import NextLink from "next/link"
 
 import config from "../../public/data/config.json"
@@ -11,6 +11,20 @@ export default function About() {
             <Text fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"}>
                 {children}
             </Text>
+        )
+    }
+
+    const ContractLink = ({ label, chainId }) => {
+        return (
+            <Link
+                as={NextLink}
+                href={`${config.chains[chainId].blockExplorerUrl}/address/${config.chains[chainId].nftContractAddress}`}
+                color={"blue"}
+                textDecoration={"underline"}
+                target="_blank"
+            >
+                {label} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+            </Link>
         )
     }
 
@@ -27,18 +41,17 @@ export default function About() {
             mt={5}
             textAlign={"justify"}
         >
-            <Text fontSize={"2xl"} fontWeight={"bold"}>
-                Calling all Ethereum Settlers!
-            </Text>
             <VStack>
-                <SubHeading>Welcome to the Settlement NFT Minting Dapp</SubHeading>
+                <SubHeading>About Ethereum Settlers</SubHeading>
                 <Text>
                     This project is a free mint NFT for anyone who feels like they have found their place as a part of the Ethereum ecosystem. It has
                     been created as an example project to experiment with ERC721 and ERC20 tokens. There are no fees, royalties, or costs associated
-                    with minting other than the gas fee. It has been deployed on multiple chains (Ethereum mainnet, Base mainnet, Ethereum Holesky and
-                    Base Sepolia) so anyone can mint a Settlement NFT. The contracts are verified on public explorers and are not upgradeable. The
-                    source code is available on GitHub for both the contracts and this UI. All the code is fully open source for anyone to copy,
-                    modify and reuse under an MIT licensed.
+                    with minting other than the gas fee. It has been deployed on multiple chains (
+                    <ContractLink label={"Ethereum mainnet"} chainId={1} />, <ContractLink label={"Base mainnet"} chainId={8453} />,{" "}
+                    <ContractLink label={"Ethereum Holesky"} chainId={17000} /> and <ContractLink label={"Base Sepolia"} chainId={84532} />) so anyone
+                    can mint a Settlement NFT. The contracts are verified on public explorers and are not upgradeable. The source code is available on
+                    GitHub for both the contracts and this UI. All the code is fully open source for anyone to copy, modify and reuse under an MIT
+                    licensed.
                 </Text>
             </VStack>
             <VStack>
@@ -68,12 +81,21 @@ export default function About() {
                 </Text>
             </VStack>
             <VStack>
-                <SubHeading>Custom RPC (optional)</SubHeading>
-                {/* TODO: Add icon and GitHub README link */}
+                <SubHeading>Custom RPC</SubHeading>
                 <Text>
                     If the default RPC is not working and/or you would prefer to use a different RPC provider to query the network you can enter an
-                    alternative RPC URL by clicking the button in menu bar at the top of this page. This UI can be run locally with a local RPC
-                    provider so no external dependencies are required. See the GitHub README for more information.
+                    alternative RPC URL by clicking the <FontAwesomeIcon icon={faSatelliteDish} /> button in the menu bar at the top of this page.
+                    This UI can be run locally with a local RPC provider so no external dependencies are required. See the{" "}
+                    <Link
+                        as={NextLink}
+                        href={"https://github.com/EridianAlpha/ethereum-settlers-ui"}
+                        color={"blue"}
+                        textDecoration={"underline"}
+                        target="_blank"
+                    >
+                        GitHub README <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                    </Link>{" "}
+                    for more information.
                 </Text>
             </VStack>
         </VStack>
