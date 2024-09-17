@@ -31,8 +31,8 @@
             "iconUrl": "./images/BaseLogo.png",
             "publicJsonRpc": "https://base-sepolia-rpc.publicnode.com",
             "blockExplorerUrl": "https://sepolia.basescan.org",
-            "nftContractAddress": "0x0000000000000000000000000000000000000000",
-            "tokenContractAddress": "0x0000000000000000000000000000000000000000"
+            "nftContractAddress": "0x3bd1f3caC1e62412aA089C134B2d9FdA02A80305",
+            "tokenContractAddress": "0x3DA7D9628557D59980342581B7CC24A65Ef0568C"
         },
         "31337": {
             "name": "Anvil 🧪",
