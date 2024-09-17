@@ -132,7 +132,7 @@ export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTra
                 isConfirmed: false,
             })
         }
-    }, [isConfirming, isConfirmed, error, hash, transactionState])
+    }, [isConfirming, isConfirmed, error, hash, transactionState, chainId, toast, setIsMintTransactionConfirmed])
 
     return (
         <Box position="relative" maxW={"500px"} w={"100%"}>
