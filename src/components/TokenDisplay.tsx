@@ -8,7 +8,6 @@ import config from "../../public/data/config.json"
 
 export default function TokenDisplay({ provider, nftId }) {
     const [tokenBalance, setTokenBalance] = useState(0)
-    const [tokenEmissionRate, setTokenEmissionRate] = useState(0)
 
     const { address: connectedWalletAddress } = useAccount()
     const chainId = useChainId()
@@ -23,6 +22,9 @@ export default function TokenDisplay({ provider, nftId }) {
             const abi = ["function balanceOf(address account) view returns (uint256)", "function TOKEN_EMISSION_RATE() view returns (uint256)"]
             const contract = new ethers.Contract(config.chains[chainId].tokenContractAddress, abi, provider)
 
+            // If the nftId is 0 or null, the connectedWalletAddress does not have an NFT, so return early
+            if (!nftId) return
+
             try {
                 const balance = await contract.balanceOf(connectedWalletAddress)
                 const formattedBalance = Number(new BigNumber(balance).shiftedBy(-18))
@@ -31,7 +33,6 @@ export default function TokenDisplay({ provider, nftId }) {
                 const formattedTokenEmissionRate = Number(new BigNumber(tokenEmissionRate).shiftedBy(-18))
 
                 setTokenBalance(formattedBalance)
-                setTokenEmissionRate(formattedTokenEmissionRate)
 
                 // Start the interval (20ms) after fetching the initial balance
                 intervalId = setInterval(() => {
@@ -83,10 +84,10 @@ export default function TokenDisplay({ provider, nftId }) {
     }
 
     return (
-        <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"500px"} textAlign={"center"}>
+        <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"700px"} textAlign={"center"}>
             <HStack w={"100%"} justifyContent={{ base: "space-around", sm: "center" }} position={"relative"}>
                 <HStack gap={1}>
-                    <Text fontWeight={"bold"}>SETTLER</Text>
+                    <Text fontWeight={"bold"}>SETTLER Tokens</Text>
                     <Text fontWeight={"bold"} fontFamily={"monospace"} fontSize={"lg"} className="bgPage" px={3} py={1} borderRadius={20}>
                         {tokenBalance.toFixed(2)}
                     </Text>
@@ -105,7 +106,7 @@ export default function TokenDisplay({ provider, nftId }) {
                     <Image w={"18px"} src="./images/MetaMaskLogo.png" />
                 </Button>
             </HStack>
-            <Text>Earn {tokenEmissionRate} SETTLER per second by holding a SETTLEMENT NFT</Text>
+            <Text>Earn 1 SETTLER token per second by holding a SETTLEMENT NFT</Text>
         </VStack>
     )
 }

@@ -48,12 +48,15 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                 </Text>
             )}
             {(!isConnected || !nftId) && (
-                <MintNftButton
-                    wagmiProviderConfig={wagmiProviderConfig}
-                    nftId={nftId}
-                    setIsMintTransactionConfirmed={setIsMintTransactionConfirmed}
-                />
+                <>
+                    <MintNftButton
+                        wagmiProviderConfig={wagmiProviderConfig}
+                        nftId={nftId}
+                        setIsMintTransactionConfirmed={setIsMintTransactionConfirmed}
+                    />
+                </>
             )}
+            {(!isContractDeployed || !isConnected) && <TokenDisplay provider={provider} nftId={nftId} />}
             {isContractDeployed && connectedWalletAddress && (
                 <>
                     <NftDisplay provider={provider} nftId={nftId} setNftId={setNftId} isMintTransactionConfirmed={isMintTransactionConfirmed} />
