@@ -65,8 +65,13 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                 const contract = new ethers.Contract(config.chains[chainId].nftContractAddress, abi, provider)
 
                 // Fetch the tokenURI for the connected wallet address
-                const nftId = await contract.getOwnerToId(connectedWalletAddress)
-                setNftId(nftId)
+                try {
+                    setNftId(await contract.getOwnerToId(connectedWalletAddress))
+                } catch (error) {
+                    // Handle the case where the function does not return a value
+                    setTokenData(null)
+                    return
+                }
 
                 // If the nftId is 0 or null, the connectedWalletAddress does not have an NFT, so return early
                 if (!nftId) {
@@ -110,7 +115,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
         }
 
         fetchNftUri()
-    }, [provider, isMintTransactionConfirmed, chainId, nftId])
+    }, [provider, isMintTransactionConfirmed, chainId, nftId, connectedWalletAddress, setNftId])
 
     // If the tokenData is fetched, display the NFT metadata
     if (tokenData)

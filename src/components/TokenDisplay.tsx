@@ -23,10 +23,20 @@ export default function TokenDisplay({ provider, nftId }) {
             const contract = new ethers.Contract(config.chains[chainId].tokenContractAddress, abi, provider)
 
             // If the nftId is 0 or null, the connectedWalletAddress does not have an NFT, so return early
-            if (!nftId) return
+            if (!nftId) {
+                setTokenBalance(0)
+                return
+            }
 
             try {
-                const balance = await contract.balanceOf(connectedWalletAddress)
+                // If the balance returns an error, return early
+                let balance
+                try {
+                    balance = await contract.balanceOf(connectedWalletAddress)
+                } catch (error) {
+                    return
+                }
+
                 const formattedBalance = Number(new BigNumber(balance).shiftedBy(-18))
 
                 const tokenEmissionRate = await contract.TOKEN_EMISSION_RATE()
@@ -103,7 +113,7 @@ export default function TokenDisplay({ provider, nftId }) {
                     display={isMobile ? "none" : "inherit"}
                 >
                     <Text>Add to </Text>
-                    <Image w={"18px"} src="./images/MetaMaskLogo.png" />
+                    <Image w={"18px"} src="./images/MetaMaskLogo.png" alt="MetaMask Icon" />
                 </Button>
             </HStack>
             <Text>Earn 1 SETTLER token per second by holding a SETTLEMENT NFT</Text>
