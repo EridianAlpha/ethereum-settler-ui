@@ -38,7 +38,7 @@ export default function CurrentAddressInfo({ setNftId }) {
         >
             <Button h={"100%"} borderRadius={"full"} onClick={openChainModal} pl={0} pr={2}>
                 <HStack>
-                    <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} />
+                    <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} alt="Chain Icon" />
                     <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
                 </HStack>
             </Button>

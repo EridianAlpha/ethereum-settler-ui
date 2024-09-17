@@ -39,6 +39,7 @@ const App = () => {
             },
         })
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const customChains: any = [
             customChainConfig(wagmiEthMainnet),
             customChainConfig(wagmiBaseMainnet),

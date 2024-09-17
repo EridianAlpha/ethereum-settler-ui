@@ -1,7 +1,5 @@
-import { Text, Box, Image, Button, VStack } from "@chakra-ui/react"
+import { Text, Button, VStack } from "@chakra-ui/react"
 import { useConnectModal } from "@rainbow-me/rainbowkit"
-
-import config from "../../public/data/config.json"
 
 export default function ConnectWalletButton() {
     const { openConnectModal } = useConnectModal()

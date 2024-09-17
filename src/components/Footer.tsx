@@ -1,7 +1,6 @@
-import { Flex, Link, Text, Box, Code } from "@chakra-ui/react"
+import { Flex, Link, Text } from "@chakra-ui/react"
 
 import NextLink from "next/link"
-import { borderRadius } from "polished"
 
 export default function Footer() {
     return (

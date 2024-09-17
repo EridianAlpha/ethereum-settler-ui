@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { Text, HStack, VStack, Button, Image, Box } from "@chakra-ui/react"
+import { Text, HStack, VStack, Button, Image } from "@chakra-ui/react"
 import { BigNumber } from "bignumber.js"
 import { useAccount, useChainId } from "wagmi"
 
