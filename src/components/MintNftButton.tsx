@@ -96,7 +96,7 @@ export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTra
                     </Text>
                 ),
                 status: "success",
-                duration: 10000,
+                duration: 5000,
                 isClosable: true,
                 position: "top-right",
                 variant: "solid",
