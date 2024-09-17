@@ -8,7 +8,7 @@ import { useChainId, useAccount } from "wagmi"
 import config from "../../public/data/config.json"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { faChevronRight, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 
 export default function NftDisplay({ provider, nftId, setNftId, isMintTransactionConfirmed }) {
     const [tokenData, setTokenData] = useState(null)
@@ -29,16 +29,24 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
 
     const NftMetadata = ({ label, content, link = "", downloadName = "" }) => {
         return (
-            <VStack gap={1} className="bgPage" borderRadius={15} px={3} py={1} wordBreak="break-all" whiteSpace="normal">
+            <VStack gap={1} className="bgPage" borderRadius={15} px={3} py={1} wordBreak={"break-word"} whiteSpace="normal" textAlign={"center"}>
                 <Text fontWeight={"bold"}>{label}</Text>
                 {link ? (
-                    <Text textAlign={"center"}>
-                        <Link as={NextLink} href={link} color={"blue"} target="_blank" download={downloadName} rel="noopener noreferrer">
-                            {content}
+                    <Text>
+                        <Link
+                            as={NextLink}
+                            href={link}
+                            color={"blue"}
+                            target="_blank"
+                            textDecoration={"underline"}
+                            download={downloadName}
+                            rel="noopener noreferrer"
+                        >
+                            {content} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
                         </Link>
                     </Text>
                 ) : (
-                    <Text textAlign={"center"}>{content}</Text>
+                    <Text>{content}</Text>
                 )}
             </VStack>
         )
@@ -151,10 +159,24 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                             <NftMetadata label="Name" content={tokenData.name} />
                             <NftMetadata label="Description" content={tokenData.description} />
                             <NftMetadata
+                                label="Chain"
+                                content={`${tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value} - ${
+                                    config.chains[tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value]?.name
+                                }`}
+                            />
+                            <NftMetadata
                                 label="Mint Timestamp"
                                 content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
                             />
-                            <NftMetadata label="Current Owner" content={connectedWalletAddress} />
+                            <NftMetadata
+                                label="Days Since Mint"
+                                content={tokenData.attributes.find((attr) => attr.trait_type === "Days Since Mint")?.value}
+                            />
+                            <NftMetadata
+                                label="Current Owner"
+                                content={connectedWalletAddress}
+                                link={`${config.chains[chainId].blockExplorerUrl}/address/${connectedWalletAddress}`}
+                            />
                             <NftMetadata
                                 label="Background Image"
                                 content={tokenData.image}

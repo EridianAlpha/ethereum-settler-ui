@@ -102,7 +102,7 @@ export default function TokenDisplay({ provider, nftId }) {
                     display={isMobile ? "none" : "inherit"}
                 >
                     <Text>Add to </Text>
-                    <Image w={"20px"} src="./images/MetaMaskLogo.png" />
+                    <Image w={"18px"} src="./images/MetaMaskLogo.png" />
                 </Button>
             </HStack>
             <Text>Earn {tokenEmissionRate} SETTLER per second by holding a SETTLEMENT NFT</Text>

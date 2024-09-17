@@ -33,9 +33,9 @@ export default function About() {
             <VStack>
                 <SubHeading>About Ethereum Settlers</SubHeading>
                 <Text>
-                    This project is a free mint NFT for anyone who feels like they have found their home as a part of the Ethereum ecosystem. It has
-                    been created as an example project to experiment with ERC721 and ERC20 tokens. There are no fees, royalties, or costs associated
-                    with minting other than the gas fee. It has been deployed on multiple chains (
+                    This project is a free mint NFT for anyone who feels at home as part of the Ethereum ecosystem. It has been created as an example
+                    project to experiment with ERC721 and ERC20 tokens. There are no fees, royalties, or costs associated with minting other than the
+                    gas fee. It has been deployed on multiple chains (
                     <ContractLink label={"Ethereum mainnet"} chainId={1} />, <ContractLink label={"Base mainnet"} chainId={8453} />,{" "}
                     <ContractLink label={"Ethereum Holesky"} chainId={17000} /> and <ContractLink label={"Base Sepolia"} chainId={84532} />) so anyone
                     can mint a Settlement NFT. The contracts are verified on public explorers and are not upgradeable. The source code is available on
