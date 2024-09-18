@@ -95,10 +95,19 @@ export default function TokenDisplay({ provider, nftId }) {
 
     return (
         <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"700px"} textAlign={"center"}>
-            <HStack w={"100%"} justifyContent={{ base: "space-around", sm: "center" }} position={"relative"}>
+            <HStack w={"100%"} justifyContent={{ base: "space-around", sm: "center" }} position={"relative"} flexWrap={"wrap"}>
                 <HStack gap={1}>
                     <Text fontWeight={"bold"}>SETTLER Tokens</Text>
-                    <Text fontWeight={"bold"} fontFamily={"monospace"} fontSize={"lg"} className="bgPage" px={3} py={1} borderRadius={20}>
+                    <Text
+                        fontWeight={"bold"}
+                        fontFamily={"monospace"}
+                        fontSize={"lg"}
+                        className="bgPage"
+                        mr={{ base: 0, sm: 5, md: 0 }}
+                        px={3}
+                        py={1}
+                        borderRadius={20}
+                    >
                         {tokenBalance.toFixed(2)}
                     </Text>
                 </HStack>
@@ -111,6 +120,7 @@ export default function TokenDisplay({ provider, nftId }) {
                     position={{ base: "relative", sm: "absolute" }}
                     right={0}
                     display={isMobile ? "none" : "inherit"}
+                    minW={"fit-content"}
                 >
                     <Text>Add to </Text>
                     <Image w={"18px"} src="./images/MetaMaskLogo.png" alt="MetaMask Icon" />
