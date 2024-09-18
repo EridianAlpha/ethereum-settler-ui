@@ -1,5 +1,5 @@
 {
-    "nftIpfsUrl": "https://ipfs.io/ipfs/QmViprAUrkh1ECEYBnXyNgDhcij6giT6xJuPkNCk8pTjbX",
+    "localNftImage": "./images/QmViprAUrkh1ECEYBnXyNgDhcij6giT6xJuPkNCk8pTjbX.png",
     "walletconnectId": "60a028ff75724d811d88b01b64e08ee8",
     "chains": {
         "1": {

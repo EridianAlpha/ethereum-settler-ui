@@ -71,7 +71,7 @@ export default function TokenDisplay({ provider, nftId }) {
         const tokenAddress = config.chains[chainId].tokenContractAddress
         const tokenSymbol = "SETTLER"
         const tokenDecimals = 18
-        const tokenImage = config.nftIpfsUrl
+        const tokenImage = config.localNftImage
 
         try {
             if (window.ethereum) {

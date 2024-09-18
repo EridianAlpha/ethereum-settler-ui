@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { VStack, HStack, Text, Box, Link } from "@chakra-ui/react"
+import { VStack, HStack, Text, Box, Link, Image } from "@chakra-ui/react"
 import NextLink from "next/link"
 
 import { useChainId, useAccount } from "wagmi"
@@ -8,7 +8,7 @@ import { useChainId, useAccount } from "wagmi"
 import config from "../../public/data/config.json"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronRight, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
+import { faChevronRight, faDownload, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
 
 export default function NftDisplay({ provider, nftId, setNftId, isMintTransactionConfirmed }) {
     const [tokenData, setTokenData] = useState(null)
@@ -39,10 +39,10 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                             color={"blue"}
                             target="_blank"
                             textDecoration={"underline"}
-                            download={downloadName}
+                            download={downloadName ? downloadName : false}
                             rel="noopener noreferrer"
                         >
-                            {content} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                            {content} <FontAwesomeIcon icon={downloadName ? faDownload : faUpRightFromSquare} size={"sm"} />
                         </Link>
                     </Text>
                 ) : (
@@ -50,6 +50,23 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                 )}
             </VStack>
         )
+    }
+
+    const base64EncodeImage = async (imageLocation: string) => {
+        // Fetch the image and convert it to a Base64 string
+        const response = await fetch(imageLocation)
+
+        const blob = await response.blob()
+
+        // Create a Base64 string from the blob
+        const base64Image = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onloadend = () => resolve(reader.result as string)
+            reader.onerror = reject
+            reader.readAsDataURL(blob)
+        })
+
+        return base64Image
     }
 
     useEffect(() => {
@@ -82,10 +99,10 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                 // Fetch the tokenURI for the NFT
                 const uri = await contract.tokenURI(nftId)
 
-                // Remove the 'data:application/json;base64,' part from the uri and decode the base64 string
+                // Remove the 'data:application/json;base64,' part from the uri and decode the Base64 string
                 const base64Data = uri.replace("data:application/json;base64,", "")
 
-                // Decode base64 and parse JSON
+                // Decode Base64 and parse JSON
                 const jsonData = JSON.parse(atob(base64Data))
 
                 // Set the token data to display in the UI
@@ -93,16 +110,19 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
 
                 // Check if jsonData.image contains an IPFS URL and replace it in the SVG
                 if (jsonData.imageCompositeSvg) {
-                    // Remove the base64 prefix for the SVG data (data:image/svg+xml;base64,)
+                    // Remove the Base64 prefix for the SVG data (data:image/svg+xml;base64,)
                     const encodedSvg = jsonData.imageCompositeSvg.replace("data:image/svg+xml;base64,", "")
 
                     // Decode base64 to plain SVG string
                     const decodedSvg = atob(encodedSvg)
 
-                    // Replace ipfs:// with a public IPFS gateway inside the SVG
-                    const modifiedSvg = decodedSvg.replace(/ipfs:\/\//g, "https://ipfs.io/ipfs/")
+                    // Convert the local NFT image to a Base64 string
+                    const base64EncodeImageResponse = await base64EncodeImage(config.localNftImage)
 
-                    // Re-encode the modified SVG to base64
+                    // Replace ipfs://... with the full Base64 image directly in the SVG
+                    const modifiedSvg = decodedSvg.replace(new RegExp(jsonData.image, "g"), base64EncodeImageResponse)
+
+                    // Re-encode the modified SVG to Base64
                     const reEncodedSvg = btoa(modifiedSvg)
 
                     // Set the SVG content to the modified SVG
@@ -120,9 +140,8 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
     // If the tokenData is fetched, display the NFT metadata
     if (tokenData)
         return (
-            <VStack w={"100%"} alignItems={"center"} gap={0}>
+            <VStack w={"100%"} maxW={"500px"} alignItems={"center"} gap={0}>
                 <VStack
-                    maxW={"500px"}
                     w={"100%"}
                     gap={0}
                     className={"bgContent"}
@@ -131,7 +150,7 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                     overflow={"hidden"}
                 >
                     <Box w={"100%"} borderRadius={25} overflow={"hidden"}>
-                        {svgContent && <embed src={svgContent} />}
+                        {svgContent && <Image src={svgContent} alt={"SVG Composite NFT Image"} />}
                     </Box>
                     <HStack
                         justifyContent={"space-between"}
@@ -162,52 +181,37 @@ export default function NftDisplay({ provider, nftId, setNftId, isMintTransactio
                     </HStack>
                 </VStack>
                 {isViewNftMetadataExpanded && (
-                    <VStack gap={0}>
-                        <VStack gap={5} pt={3} px={8} maxW={"500px"} alignItems={"center"} className={"bgContent"}>
-                            <NftMetadata label="Name" content={tokenData.name} />
-                            <NftMetadata label="Description" content={tokenData.description} />
-                            <NftMetadata
-                                label="Chain"
-                                content={`${tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value} - ${
-                                    config.chains[tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value]?.name
-                                }`}
-                            />
-                            <NftMetadata
-                                label="Mint Timestamp"
-                                content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
-                            />
-                            <NftMetadata
-                                label="Days Since Mint"
-                                content={tokenData.attributes.find((attr) => attr.trait_type === "Days Since Mint")?.value}
-                            />
-                            <NftMetadata
-                                label="Current Owner"
-                                content={connectedWalletAddress}
-                                link={`${config.chains[chainId].blockExplorerUrl}/address/${connectedWalletAddress}`}
-                            />
-                            <NftMetadata
-                                label="Background Image"
-                                content={tokenData.image}
-                                link={tokenData.image.replace(/ipfs:\/\//g, "https://ipfs.io/ipfs/")}
-                            />
-                        </VStack>
-                        <VStack
-                            gap={5}
-                            py={8}
-                            px={8}
-                            maxW={"100%"}
-                            borderBottomRadius={{ base: 20, md: 40, xl: 50 }}
-                            borderTopRadius={{ sm: 0, md: 30, lg: 40, xl: 50 }}
-                            alignItems={"center"}
-                            className={"bgContent"}
-                        >
-                            <NftMetadata
-                                label="Composite SVG Image"
-                                content={svgContent}
-                                link={svgContent}
-                                downloadName={`${tokenData.name} ${getFormattedDate()}.svg`}
-                            />
-                        </VStack>
+                    <VStack gap={5} pt={3} pb={5} px={4} maxW={"500px"} alignItems={"center"} className={"bgContent"} borderBottomRadius={25}>
+                        <NftMetadata label="Name" content={tokenData.name} />
+                        <NftMetadata label="Description" content={tokenData.description} />
+                        <NftMetadata
+                            label="Chain"
+                            content={`${tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value} - ${
+                                config.chains[tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value]?.name
+                            }`}
+                        />
+                        <NftMetadata
+                            label="Mint Timestamp"
+                            content={tokenData.attributes.find((attr) => attr.trait_type === "Mint Timestamp")?.value}
+                        />
+                        <NftMetadata
+                            label="Days Since Mint"
+                            content={tokenData.attributes.find((attr) => attr.trait_type === "Days Since Mint")?.value}
+                        />
+                        <NftMetadata
+                            label="Current Owner"
+                            content={connectedWalletAddress}
+                            link={`${config.chains[chainId].blockExplorerUrl}/address/${connectedWalletAddress}`}
+                        />
+                        <NftMetadata label="Background Image" content={tokenData.image} link={config.localNftImage} />
+                        <NftMetadata
+                            label="Composite SVG Image"
+                            content={svgContent.slice(0, 200) + "..."}
+                            link={svgContent}
+                            downloadName={`${tokenData.name} ChainId - ${
+                                tokenData.attributes.find((attr) => attr.trait_type === "Chain")?.value
+                            } Download Date ${getFormattedDate()}.svg`}
+                        />
                     </VStack>
                 )}
             </VStack>

@@ -137,7 +137,7 @@ export default function MintNftButton({ wagmiProviderConfig, nftId, setIsMintTra
     return (
         <Box position="relative" maxW={"500px"} w={"100%"}>
             <Image
-                src={config.nftIpfsUrl}
+                src={config.localNftImage}
                 alt="Unminted NFT Image"
                 borderRadius={"20px"}
                 filter="grayscale(100%) brightness(30%)"
