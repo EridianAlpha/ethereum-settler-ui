@@ -41,7 +41,7 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
     return (
         <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
             {useCustomRpc && <CustomRpcInput setUseCustomRpc={setUseCustomRpc} customRpc={customRpc} setCustomRpc={setCustomRpc} />}
-            {isConnected ? <CurrentAddressInfo setNftId={setNftId} /> : <ConnectWalletButton />}
+            {isConnected ? <CurrentAddressInfo setNftId={setNftId} setIsContractDeployed={setIsContractDeployed} /> : <ConnectWalletButton />}
             {isConnected && !isContractDeployed && (
                 <Text className={"errorText"} borderRadius={"20px"} px={2} py={1} textAlign={"center"}>
                     Contract not yet deployed on the {config.chains[chainId].name} network

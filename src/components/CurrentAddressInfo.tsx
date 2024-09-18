@@ -9,7 +9,7 @@ import config from "../../public/data/config.json"
 import { useChainModal } from "@rainbow-me/rainbowkit"
 import { useChainId, useAccount, useDisconnect } from "wagmi"
 
-export default function CurrentAddressInfo({ setNftId }) {
+export default function CurrentAddressInfo({ setNftId, setIsContractDeployed }) {
     const { address: connectedWalletAddress } = useAccount()
     const { disconnect } = useDisconnect()
     const { openChainModal } = useChainModal()
@@ -99,6 +99,7 @@ export default function CurrentAddressInfo({ setNftId }) {
                     onClick={() => {
                         disconnect()
                         setNftId(null)
+                        setIsContractDeployed(false)
                     }}
                 >
                     <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
