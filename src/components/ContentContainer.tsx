@@ -36,7 +36,7 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                 : false
         )
         setNftId(null)
-    }, [chainId])
+    }, [chainId, isConnected])
 
     return (
         <VStack w={"100vw"} alignItems={"center"} gap={5} px={3} pt={"20px"}>
