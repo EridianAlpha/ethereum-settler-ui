@@ -12,7 +12,7 @@ import "@rainbow-me/rainbowkit/styles.css"
 import { getDefaultConfig, darkTheme, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit"
 import { http, createConfig, WagmiProvider } from "wagmi"
 import {
-    mainnet as wagmiEthMainnet,
+    // mainnet as wagmiEthMainnet,
     holesky as wagmiEthHolesky,
     base as wagmiBaseMainnet,
     anvil as wagmiAnvil,
