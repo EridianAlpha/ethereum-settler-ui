@@ -17,15 +17,18 @@ export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter
         }
     }
 
-    if (disabledChains.includes(chainId)) {
+    if (disabledChains.includes(chainId) || config.chains[chainId].viewAggregatorContractAddress === "0x0000000000000000000000000000000000000000") {
         return (
             <Tooltip
                 className="tooltip"
                 closeOnClick={false}
                 gutter={10}
+                maxW={"600px"}
+                px={5}
                 label={
                     <VStack className="tooltipLabel" fontWeight={"bold"}>
-                        <Text>Error connecting to RPC for {config.chains[chainId].name}</Text>
+                        <Text>Error connecting to RPC</Text>
+                        <Text>{config.chains[chainId].name}</Text>
                         <Text>{config.chains[chainId].publicJsonRpc}</Text>
                     </VStack>
                 }
