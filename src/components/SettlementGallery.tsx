@@ -14,6 +14,7 @@ import getRandomTreeEmoji from "../utils/TreeEmojis"
 
 import config from "../../public/data/config.json"
 import { abi as viewAggregatorContractAbi } from "../../public/data/viewAggregatorAbi"
+import { abi as settlementNftContractAbi } from "../../public/data/settlementNftAbi"
 
 type Settlement = {
     owner: string
@@ -69,11 +70,12 @@ export default function SettlementGallery() {
                     })
 
                     const provider = new ethers.JsonRpcProvider(chain.publicJsonRpc)
-                    const contract = new ethers.Contract(chain.viewAggregatorContractAddress, viewAggregatorContractAbi, provider)
+                    const viewAggregatorContract = new ethers.Contract(chain.viewAggregatorContractAddress, viewAggregatorContractAbi, provider)
+                    const settlementNftContract = new ethers.Contract(chain.nftContractAddress, settlementNftContractAbi, provider)
 
                     console.log("Fetching settlements from chain:", chainId)
 
-                    const settlements = await contract.getRandomData(10)
+                    const settlements = await viewAggregatorContract.getRandomData(50)
                     settlements.forEach((settlement) => {
                         fetchedSettlements.push({
                             owner: settlement.owner,
@@ -83,6 +85,21 @@ export default function SettlementGallery() {
                             tokenId: Number(new BigNumber(settlement.nftId)),
                         })
                     })
+
+                    // Ensure any settlements owned by the connected wallet are included
+                    if (connectedWalletAddress) {
+                        const ownerSettlements = await settlementNftContract.getOwnerToId(connectedWalletAddress)
+                        if (ownerSettlements > 0 && !settlements.find((settlement) => settlement.nftId === ownerSettlements)) {
+                            const ownerSettlement = await viewAggregatorContract.getSequentialData(ownerSettlements, ownerSettlements)
+                            fetchedSettlements.push({
+                                owner: ownerSettlement[0].owner,
+                                days: ownerSettlement[0].daysSinceMint.toString(),
+                                tokens: Number(new BigNumber(ownerSettlement[0].tokens).shiftedBy(-18)),
+                                chainId: parseInt(chainId),
+                                tokenId: Number(new BigNumber(ownerSettlement[0].nftId)),
+                            })
+                        }
+                    }
                 } catch (error) {
                     console.error(`Error fetching settlements for ${chainId}: ${error}`)
 
@@ -93,7 +110,7 @@ export default function SettlementGallery() {
             setSettlements(fetchedSettlements)
         }
         fetchSettlements()
-    }, [setSettlements, setDisabledChains])
+    }, [setSettlements, setDisabledChains, connectedWalletAddress])
 
     // UseEffect - Process settlements
     useEffect(() => {
