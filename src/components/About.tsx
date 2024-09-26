@@ -140,7 +140,7 @@ export default function About() {
                 <VStack>
                     <SubHeading>SETTLER Token</SubHeading>
                     <Text>
-                        For every second you hold a Settlement NFT in your wallet, you will earn 1 SETTLER token. Your SETTLER token balance is
+                        For every second you hold a Settlement NFT in your wallet, you will get 1 SETTLER token. Your SETTLER token balance is
                         calculated based on the mint timestamp of your NFT and the current time. Every time you interact with the Settlement NFT (e.g.
                         transfer it to a new wallet) and every time you transfer SETTLER tokens, the calculated tokens will be minted to your wallet.
                         The SETTLER token will never have any value, and it is not listed on any exchanges.
