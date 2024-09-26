@@ -10,6 +10,7 @@ import { BigNumber } from "bignumber.js"
 
 import SettlementCard from "./SettlementCard"
 import ChainCheckbox from "./ChainCheckbox"
+import getRandomTreeEmoji from "../utils/TreeEmojis"
 
 import config from "../../public/data/config.json"
 import { abi as viewAggregatorContractAbi } from "../../public/data/viewAggregatorAbi"
@@ -156,7 +157,7 @@ export default function SettlementGallery() {
     }, [processedSettlements])
 
     return (
-        <VStack id="gallery" borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={0} mb={isGalleryExpanded ? 0 : { base: "20vh", sm: "50vh" }}>
+        <VStack id="gallery" borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={0} minH={{ base: "20vh", sm: "60vh" }}>
             <HStack
                 border={"4px solid green"}
                 borderBottom={isGalleryExpanded ? "none" : "4px solid green"}
@@ -270,7 +271,7 @@ export default function SettlementGallery() {
                     </HStack>
                 </HStack>
                 <Divider w={"100%"} borderWidth={"1px"} />
-                <Box w={"100%"} py={3} minH={"60vh"}>
+                <Box w={"100%"} py={3}>
                     {processedSettlements.length === 1 && <SettlementCard index={0} data={processedSettlements[0]} />}
                     {processedSettlements.length > 1 && !calculating && (
                         <>
@@ -284,6 +285,35 @@ export default function SettlementGallery() {
                                 </VStack>
                             )}
                         </>
+                    )}
+                    {processedSettlements.length === 0 && (
+                        <HStack justifyContent={"center"} w={"100%"} gap={5} flexWrap={"wrap"}>
+                            <HStack gap={{ base: 3, sm: 6 }} flexWrap={"wrap"} justifyContent={"center"} w={{ base: "100%", xl: "fit-content" }}>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                            </HStack>
+                            <Text textAlign={"center"} fontWeight={"bold"} px={10} w={{ base: "100%", xl: "fit-content" }}>
+                                No results found
+                            </Text>
+                            <HStack gap={{ base: 3, sm: 6 }} flexWrap={"wrap"} justifyContent={"center"} w={{ base: "100%", xl: "fit-content" }}>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                                <Text>{getRandomTreeEmoji()}</Text>
+                            </HStack>
+                        </HStack>
                     )}
                 </Box>
             </VStack>

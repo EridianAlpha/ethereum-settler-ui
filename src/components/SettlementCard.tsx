@@ -6,17 +6,13 @@ import NextLink from "next/link"
 import { useAccount } from "wagmi"
 
 import config from "../../public/data/config.json"
+import getRandomTreeEmoji from "../utils/TreeEmojis"
 
 export default function SettlementCard({ index, data: settlement }) {
     const { address: connectedWalletAddress } = useAccount()
 
-    const treeEmojis = ["🌲", "🌳", "⛰️", "🏕️", "🪵", "☀️"]
     const getRandomTreeCount = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min
-    }
-
-    const getRandomTreeEmoji = () => {
-        return treeEmojis[Math.floor(Math.random() * treeEmojis.length)]
     }
 
     if (settlement.trees) {
