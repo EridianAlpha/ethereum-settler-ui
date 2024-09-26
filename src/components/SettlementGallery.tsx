@@ -5,10 +5,14 @@ import { faXmark, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { useAccount } from "wagmi"
 import { Masonry } from "masonic"
 
+import { ethers } from "ethers"
+import { BigNumber } from "bignumber.js"
+
 import SettlementCard from "./SettlementCard"
 import ChainCheckbox from "./ChainCheckbox"
 
 import config from "../../public/data/config.json"
+import { abi as viewAggregatorContractAbi } from "../../public/data/viewAggregatorAbi"
 
 type Settlement = {
     owner: string
@@ -29,138 +33,40 @@ export default function SettlementGallery() {
     const [calculating, setCalculating] = useState(true)
     const [settlementOwnerFilter, setSettlementOwnerFilter] = useState("")
     const [chainIdFilter, setChainIdFilter] = useState([])
-    const [settlements, setSettlements] = useState<ProcessedSettlement[]>([
-        {
-            owner: "0xDE7ff8092c91503cd468aBb2DEb115a91fE83c26",
-            days: "77",
-            tokens: 123456,
-            chainId: 8453,
-            tokenId: 1,
-        },
-        {
-            owner: "0x9ca44BDA52cACb3a4F7fB3ED46498a00698238e1",
-            days: "52",
-            tokens: 654321,
-            chainId: 8453,
-            tokenId: 9999,
-        },
-        {
-            owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
-            days: "90",
-            tokens: 789123,
-            chainId: 8453,
-            tokenId: 3,
-        },
-        {
-            owner: "0xDE7ff8092c91503cd468aBb2DEb115a91fE83c26",
-            days: "120",
-            tokens: 123456,
-            chainId: 84532,
-            tokenId: 4,
-        },
-        {
-            owner: "0xAB2ff8092c91503cd468aBb2DEb115a91fE83bF1",
-            days: "52",
-            tokens: 654321,
-            chainId: 17000,
-            tokenId: 5,
-        },
-        {
-            owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
-            days: "90",
-            tokens: 789123,
-            chainId: 8453,
-            tokenId: 6,
-        },
-        {
-            owner: "0xDE7ff8092c91503cd468aBb2DEb115a91fE83c26",
-            days: "120",
-            tokens: 123456,
-            chainId: 84532,
-            tokenId: 7,
-        },
-        {
-            owner: "0xAB2ff8092c91503cd468aBb2DEb115a91fE83bF1",
-            days: "52",
-            tokens: 654321,
-            chainId: 17000,
-            tokenId: 8,
-        },
-        {
-            owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
-            days: "90",
-            tokens: 789123,
-            chainId: 8453,
-            tokenId: 9,
-        },
-        {
-            owner: "0x9ca44BDA52cACb3a4F7fB3ED46498a00698238e1",
-            days: "77",
-            tokens: 123456,
-            chainId: 17000,
-            tokenId: 10,
-        },
-        {
-            owner: "0xAB2ff8092c91503cd468aBb2DEb115a91fE83bF1",
-            days: "52",
-            tokens: 654321,
-            chainId: 8453,
-            tokenId: 11,
-        },
-        {
-            owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
-            days: "90",
-            tokens: 789123,
-            chainId: 84532,
-            tokenId: 12,
-        },
-        {
-            owner: "0xDE7ff8092c91503cd468aBb2DEb115a91fE83c26",
-            days: "1200",
-            tokens: 123456,
-            chainId: 8453,
-            tokenId: 13,
-        },
-        {
-            owner: "0xAB2ff8092c91503cd468aBb2DEb115a91fE83bF1",
-            days: "1200",
-            tokens: 654321,
-            chainId: 84532,
-            tokenId: 14,
-        },
-        {
-            owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
-            days: "90",
-            tokens: 789123,
-            chainId: 8453,
-            tokenId: 15,
-        },
-        {
-            owner: "0xDE7ff8092c91503cd468aBb2DEb115a91fE83c26",
-            days: "120",
-            tokens: 123456,
-            chainId: 17000,
-            tokenId: 16,
-        },
-        {
-            owner: "0xAB2ff8092c91503cd468aBb2DEb115a91fE83bF1",
-            days: "52",
-            tokens: 654321,
-            chainId: 8453,
-            tokenId: 17,
-        },
-        {
-            owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
-            days: "90",
-            tokens: 789123,
-            chainId: 17000,
-            tokenId: 18,
-        },
-    ])
+    const [settlements, setSettlements] = useState<ProcessedSettlement[]>([])
 
     // UseEffect - Fetch settlements
     useEffect(() => {
-        // TODO: Fetch settlements
+        const fetchSettlements = async () => {
+            const fetchedSettlements: ProcessedSettlement[] = []
+
+            for (const chainId in config.chains) {
+                const chain = config.chains[chainId]
+                if (chain.type === "local" && process.env.NEXT_PUBLIC_DEV_MODE_FLAG !== "true") {
+                    continue
+                }
+                if (chain.viewAggregatorContractAddress === "0x0000000000000000000000000000000000000000") {
+                    continue
+                }
+
+                const provider = new ethers.JsonRpcProvider(chain.publicJsonRpc)
+                const contract = new ethers.Contract(chain.viewAggregatorContractAddress, viewAggregatorContractAbi, provider)
+
+                const settlements = await contract.getRandomData(10)
+                settlements.forEach((settlement) => {
+                    console.log("settlement.nftId", settlement.nftId)
+                    fetchedSettlements.push({
+                        owner: settlement.owner,
+                        days: settlement.daysSinceMint.toString(),
+                        tokens: Number(new BigNumber(settlement.tokens).shiftedBy(-18)),
+                        chainId: parseInt(chainId),
+                        tokenId: Number(new BigNumber(settlement.nftId)),
+                    })
+                })
+            }
+            setSettlements(fetchedSettlements)
+        }
+        fetchSettlements()
     }, [setSettlements])
 
     // UseEffect - Process settlements
@@ -205,7 +111,7 @@ export default function SettlementGallery() {
                 filteredSettlements = filteredSettlements.filter((settlement) => settlement.owner === settlementOwnerFilter)
             }
 
-            // If there is a chainIdFilter set, filter the settlements by chainId
+            // If there is a chainIdFilter set, filter the settlements by chainId, else show all
             if (chainIdFilter.length > 0) {
                 filteredSettlements = filteredSettlements.filter((settlement) => chainIdFilter.includes(settlement.chainId.toString()))
             }
@@ -214,14 +120,14 @@ export default function SettlementGallery() {
             const ownerSettlements = filteredSettlements.filter((settlement) => settlement.owner === connectedWalletAddress)
             filteredSettlements = filteredSettlements.filter((settlement) => settlement.owner !== connectedWalletAddress)
 
-            if (filteredSettlements.length > 3) {
+            if (filteredSettlements.length >= 3) {
                 const settlementsWithTrees = addRandomTrees(filteredSettlements)
 
                 // Shuffle the remaining settlements and add random tree objects to the filteredSettlements array
                 const shuffledRemaining = shuffleArray(settlementsWithTrees)
 
                 // Add extra tree objects at the end of the array
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 6; i++) {
                     shuffledRemaining.push({ trees: true })
                 }
 
