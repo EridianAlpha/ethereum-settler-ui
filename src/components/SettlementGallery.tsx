@@ -39,6 +39,10 @@ export default function SettlementGallery() {
     const [disabledChains, setDisabledChains] = useState([])
     const [settlements, setSettlements] = useState<ProcessedSettlement[]>([])
 
+    // TODO: This is only counting the number of settlements fetched, not the number of settlements minted
+    // It might be confusing if the number of settlements (total and/or per chain) is more than the number of settlements displayed
+    const [settlementChainTotals, setSettlementChainTotals] = useState({})
+
     // UseEffect - Fetch settlements
     useEffect(() => {
         const fetchSettlements = async () => {
@@ -73,9 +77,15 @@ export default function SettlementGallery() {
                     const viewAggregatorContract = new ethers.Contract(chain.viewAggregatorContractAddress, viewAggregatorContractAbi, provider)
                     const settlementNftContract = new ethers.Contract(chain.nftContractAddress, settlementNftContractAbi, provider)
 
-                    console.log("Fetching settlements from chain:", chainId)
+                    // TODO: This is set to 999 to fetch all settlements, but it should be set to the total number of settlements minted
+                    // If this causes performance issues, a subset of settlements could be fetched with a smaller number, but that will
+                    // change the way settlementChainTotals needs to be calculated and displayed
+                    const settlements = await viewAggregatorContract.getRandomData(999)
 
-                    const settlements = await viewAggregatorContract.getRandomData(50)
+                    setSettlementChainTotals((prev) => {
+                        return { ...prev, [chainId]: settlements.length }
+                    })
+
                     settlements.forEach((settlement) => {
                         fetchedSettlements.push({
                             owner: settlement.owner,
@@ -110,7 +120,7 @@ export default function SettlementGallery() {
             setSettlements(fetchedSettlements)
         }
         fetchSettlements()
-    }, [setSettlements, setDisabledChains, connectedWalletAddress])
+    }, [setSettlements, setDisabledChains, setSettlementChainTotals, connectedWalletAddress])
 
     // UseEffect - Process settlements
     useEffect(() => {
@@ -228,9 +238,14 @@ export default function SettlementGallery() {
                     transform={`rotate(${isGalleryExpanded ? 45 : 0}deg)`}
                     borderRadius={"full"}
                 />
-                <Text fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"} textAlign={"center"}>
-                    Settlements Gallery
-                </Text>
+                <HStack fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"} textAlign={"center"} gap={3}>
+                    <Text>Settlements Gallery</Text>
+                    {isGalleryExpanded && settlementChainTotals && !fetchingData && (
+                        <Text borderLeft={"2px solid"} pl={2}>
+                            {Object.values(settlementChainTotals).reduce((acc: number, value: number) => acc + value, 0) as number}
+                        </Text>
+                    )}
+                </HStack>
                 <Box
                     boxSize={6}
                     as={FontAwesomeIcon}
@@ -272,6 +287,7 @@ export default function SettlementGallery() {
                                         setChainIdFilter={setChainIdFilter}
                                         setCalculating={setCalculating}
                                         disabledChains={disabledChains}
+                                        settlementChainTotals={settlementChainTotals}
                                     />
                                 ))}
                         </HStack>

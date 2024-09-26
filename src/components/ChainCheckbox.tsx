@@ -4,7 +4,7 @@ import { faCircleXmark } from "@fortawesome/free-regular-svg-icons"
 
 import config from "../../public/data/config.json"
 
-export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter, setCalculating, disabledChains }) {
+export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter, setCalculating, disabledChains, settlementChainTotals }) {
     const handleClick = (chainId) => {
         setCalculating(true)
 
@@ -71,6 +71,9 @@ export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter
             >
                 <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} alt="Chain Icon" />
                 <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
+                <Text fontSize={"xl"} borderLeft={"1px solid"} pl={2}>
+                    {settlementChainTotals[chainId]}
+                </Text>
             </HStack>
         )
     }
