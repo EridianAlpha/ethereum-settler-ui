@@ -25,7 +25,7 @@
         "84532": {
             "type": "testnet",
             "name": "Base Sepolia 🧪",
-            "iconUrl": "./images/BaseLogo.png",
+            "iconUrl": "./images/BaseSepoliaLogo.png",
             "publicJsonRpc": "https://base-sepolia-rpc.publicnode.com",
             "blockExplorerUrl": "https://sepolia.basescan.org",
             "nftContractAddress": "0x3bd1f3caC1e62412aA089C134B2d9FdA02A80305",
