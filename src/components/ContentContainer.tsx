@@ -8,6 +8,7 @@ import MintNftButton from "./MintNftButton"
 import CurrentAddressInfo from "./CurrentAddressInfo"
 import CustomRpcInput from "./CustomRpcInput"
 import About from "./About"
+import SettlementGallery from "./SettlementGallery"
 
 import config from "../../public/data/config.json"
 
@@ -63,7 +64,10 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                     <TokenDisplay provider={provider} nftId={nftId} />
                 </>
             )}
-            <About />
+            <VStack gap={10} pt={5} w={"100%"}>
+                <About />
+                <SettlementGallery isMintTransactionConfirmed={isMintTransactionConfirmed} />
+            </VStack>
         </VStack>
     )
 }

@@ -1,14 +1,46 @@
-import { VStack, Text, Link } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
+import { VStack, Text, Link, HStack, Box } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSatelliteDish, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons"
+import { faSatelliteDish, faUpRightFromSquare, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import NextLink from "next/link"
+import { useRouter } from "next/router"
 
 import config from "../../public/data/config.json"
 
 export default function About() {
+    const [isAboutExpanded, setIsAboutExpanded] = useState(false)
+    const router = useRouter()
+
+    // Function to check if the current hash is "#about"
+    const checkHash = () => {
+        if (window.location.hash === "#about") {
+            setIsAboutExpanded(true)
+        } else {
+            setIsAboutExpanded(false)
+        }
+    }
+
+    useEffect(() => {
+        // Check the hash initially when the component mounts
+        checkHash()
+
+        // Listen for route changes including hash changes
+        const handleRouteChange = () => {
+            checkHash()
+        }
+
+        // Subscribe to the route change start event
+        router.events.on("hashChangeComplete", handleRouteChange)
+
+        // Cleanup the event listener when the component unmounts
+        return () => {
+            router.events.off("hashChangeComplete", handleRouteChange)
+        }
+    }, [router.events])
+
     const SubHeading = ({ children }) => {
         return (
-            <Text fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"}>
+            <Text fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"} textAlign={"center"}>
                 {children}
             </Text>
         )
@@ -22,7 +54,6 @@ export default function About() {
                 color={"blue"}
                 textDecoration={"underline"}
                 target="_blank"
-                // whiteSpace={"nowrap"}
             >
                 {label} <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
             </Link>
@@ -30,62 +61,109 @@ export default function About() {
     }
 
     return (
-        <VStack id="about" className={"contentContainer"} py={3} px={5} pb={5} borderRadius={"20px"} maxW={"700px"} gap={5} textAlign={"justify"}>
-            <VStack>
+        <VStack id="about" borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={0}>
+            <HStack
+                justifyContent={"space-between"}
+                border={"4px solid green"}
+                borderBottom={isAboutExpanded ? "none" : "4px solid green"}
+                maxW={"500px"}
+                w={"100%"}
+                cursor={"pointer"}
+                onClick={() => setIsAboutExpanded(!isAboutExpanded)}
+                className={"bgContent"}
+                py={3}
+                px={5}
+                mb={"-4px"}
+                borderRadius={"20px"}
+                borderBottomRadius={isAboutExpanded ? "0px" : "20px"}
+                zIndex={2}
+            >
+                <Box
+                    boxSize={6}
+                    as={FontAwesomeIcon}
+                    icon={faChevronRight}
+                    transition="all 0.2s"
+                    transform={`rotate(${isAboutExpanded ? 45 : 0}deg)`}
+                    borderRadius={"full"}
+                />
                 <SubHeading>About Ethereum Settlers</SubHeading>
-                <Text>
-                    This project is a free mint NFT for anyone who feels at home as part of the Ethereum ecosystem. It has been created as an example
-                    project to experiment with ERC721 and ERC20 tokens. There are no fees, royalties, or costs associated with minting other than the
-                    gas fee. The contracts have been deployed on multiple chains ({/*<ContractLink label={"Ethereum mainnet"} chainId={1} />, */}
-                    <ContractLink label={"Base mainnet"} chainId={8453} />, <ContractLink label={"Ethereum Holesky"} chainId={17000} /> and{" "}
-                    <ContractLink label={"Base Sepolia"} chainId={84532} />) so anyone can mint a Settlement NFT. The contracts are verified on public
-                    explorers and are not upgradeable. The source code is available on GitHub for both the contracts and this UI. All the code is
-                    fully open source for anyone to copy, modify and reuse under an MIT license.
-                </Text>
-            </VStack>
-            <VStack>
-                <SubHeading>Getting Started</SubHeading>
-                <Text>
-                    Simply connect your wallet using the glowing button at the top of this page, select the chain you wish to mint your Settlement NFT
-                    on, and click the mint button. You will be prompted to sign a transaction to mint your NFT. Once the transaction is confirmed, you
-                    will be able to view your NFT and the metadata associated with it.
-                </Text>
-            </VStack>
-            <VStack>
-                <SubHeading>Settlement NFT</SubHeading>
-                <Text>
-                    An unlimited number of SETTLER NFTs can be minted, and each one has the mint timestamp stored as an attribute, so the older the
-                    timestamp, the longer you have been an Ethereum Settler. Only one NFT can be held in a wallet at a time. There is nothing stopping
-                    you minting multiple Settlement NFTs from multiple wallets, as this is a personal collectable, you can use the project however you
-                    wish. This UI will display the dynamic Settlement NFT SVG which shows how many days the NFT has been minted.
-                </Text>
-            </VStack>
-            <VStack>
-                <SubHeading>SETTLER Token</SubHeading>
-                <Text>
-                    For every second you hold a Settlement NFT in your wallet, you will earn 1 SETTLER token. Your SETTLER token balance is calculated
-                    based on the mint timestamp of your NFT and the current time. Every time you interact with the Settlement NFT (e.g. transfer it to
-                    a new wallet) and every time you transfer SETTLER tokens, the calculated tokens will be minted to your wallet. The SETTLER token
-                    will never have any value, and it is not listed on any exchanges.
-                </Text>
-            </VStack>
-            <VStack>
-                <SubHeading>Custom RPC</SubHeading>
-                <Text>
-                    If the default RPC is not working and/or you would prefer to use a different RPC provider to query the network you can enter an
-                    alternative RPC URL by clicking the <FontAwesomeIcon icon={faSatelliteDish} /> button in the menu bar at the top of this page.
-                    This UI can be run locally with a local RPC provider so no external dependencies are required. See the{" "}
-                    <Link
-                        as={NextLink}
-                        href={"https://github.com/EridianAlpha/ethereum-settlers-ui"}
-                        color={"blue"}
-                        textDecoration={"underline"}
-                        target="_blank"
-                    >
-                        GitHub README <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
-                    </Link>{" "}
-                    for more information.
-                </Text>
+                <Box
+                    boxSize={6}
+                    as={FontAwesomeIcon}
+                    icon={faChevronRight}
+                    transition="all 0.2s"
+                    transform={`rotate(${isAboutExpanded ? 135 : 180}deg)`}
+                    borderRadius={"full"}
+                />
+            </HStack>
+
+            <VStack
+                py={6}
+                px={5}
+                gap={6}
+                className={"contentContainer"}
+                maxW={"1000px"}
+                hidden={!isAboutExpanded ? true : false}
+                borderRadius={"20px"}
+                borderTopRadius={{ base: "0px", md: "20px" }}
+            >
+                <VStack>
+                    <Text>
+                        This project is a free mint NFT for anyone who feels at home as part of the Ethereum ecosystem. It has been created as an
+                        example project to experiment with ERC721 and ERC20 tokens. There are no fees, royalties, or costs associated with minting
+                        other than the gas fee. The contracts have been deployed on multiple chains (
+                        {/*<ContractLink label={"Ethereum mainnet"} chainId={1} />, */}
+                        <ContractLink label={"Base mainnet"} chainId={8453} />, <ContractLink label={"Ethereum Holesky"} chainId={17000} /> and{" "}
+                        <ContractLink label={"Base Sepolia"} chainId={84532} />) so anyone can mint a Settlement NFT. The contracts are verified on
+                        public explorers and are not upgradeable. The source code is available on GitHub for both the contracts and this UI. All the
+                        code is fully open source for anyone to copy, modify and reuse under an MIT license.
+                    </Text>
+                </VStack>
+                <VStack>
+                    <SubHeading>Getting Started</SubHeading>
+                    <Text>
+                        Simply connect your wallet using the glowing button at the top of this page, select the chain you wish to mint your Settlement
+                        NFT on, and click the mint button. You will be prompted to sign a transaction to mint your NFT. Once the transaction is
+                        confirmed, you will be able to view your NFT and the metadata associated with it.
+                    </Text>
+                </VStack>
+                <VStack>
+                    <SubHeading>Settlement NFT</SubHeading>
+                    <Text>
+                        An unlimited number of SETTLER NFTs can be minted, and each one has the mint timestamp stored as an attribute, so the older
+                        the timestamp, the longer you have been an Ethereum Settler. Only one NFT can be held in a wallet at a time. There is nothing
+                        stopping you minting multiple Settlement NFTs from multiple wallets, as this is a personal collectable, you can use the
+                        project however you wish. This UI will display the dynamic Settlement NFT SVG which shows how many days the NFT has been
+                        minted.
+                    </Text>
+                </VStack>
+                <VStack>
+                    <SubHeading>SETTLER Token</SubHeading>
+                    <Text>
+                        For every second you hold a Settlement NFT in your wallet, you will get 1 SETTLER token. Your SETTLER token balance is
+                        calculated based on the mint timestamp of your NFT and the current time. Every time you interact with the Settlement NFT (e.g.
+                        transfer it to a new wallet) and every time you transfer SETTLER tokens, the calculated tokens will be minted to your wallet.
+                        The SETTLER token will never have any value, and it is not listed on any exchanges.
+                    </Text>
+                </VStack>
+                <VStack pb={2}>
+                    <SubHeading>Custom RPC</SubHeading>
+                    <Text>
+                        If the default RPC is not working and/or you would prefer to use a different RPC provider to query the network you can enter
+                        an alternative RPC URL by clicking the <FontAwesomeIcon icon={faSatelliteDish} /> button in the menu bar at the top of this
+                        page. This UI can be run locally with a local RPC provider so no external dependencies are required. See the{" "}
+                        <Link
+                            as={NextLink}
+                            href={"https://github.com/EridianAlpha/ethereum-settlers-ui"}
+                            color={"blue"}
+                            textDecoration={"underline"}
+                            target="_blank"
+                        >
+                            GitHub README <FontAwesomeIcon icon={faUpRightFromSquare} size={"sm"} />
+                        </Link>{" "}
+                        for more information.
+                    </Text>
+                </VStack>
             </VStack>
         </VStack>
     )

@@ -34,7 +34,9 @@ export default function CurrentAddressInfo({ setNftId, setIsContractDeployed }) 
             borderRadius={"20px"}
             gap={3}
             flexWrap={"wrap"}
-            justifyContent={"center"}
+            justifyContent={"space-around"}
+            maxW={"fit-content"}
+            w={"100%"}
         >
             <Button h={"100%"} borderRadius={"full"} onClick={openChainModal} pl={0} pr={2}>
                 <HStack>
@@ -42,25 +44,47 @@ export default function CurrentAddressInfo({ setNftId, setIsContractDeployed }) 
                     <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
                 </HStack>
             </Button>
-            <HStack className="bgPage" gap={3} py={1} px={3} borderRadius={"full"} onClick={handleCopy} cursor="pointer">
-                <Text
-                    fontFamily={"monospace"}
-                    fontSize={"lg"}
-                    whiteSpace="normal"
-                    overflow="visible"
-                    textOverflow="clip"
-                    wordBreak="break-word"
-                    textAlign={"center"}
-                >
-                    {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
-                </Text>
+            <HStack gap={3} w={"fit-content"} flexWrap={"wrap"} justifyContent={"center"}>
+                <HStack className="bgPage" gap={3} py={1} px={3} borderRadius={"full"} onClick={handleCopy} cursor="pointer">
+                    <Text
+                        fontFamily={"monospace"}
+                        fontSize={"lg"}
+                        whiteSpace="normal"
+                        overflow="visible"
+                        textOverflow="clip"
+                        wordBreak="break-word"
+                        textAlign={"center"}
+                    >
+                        {`${connectedWalletAddress.substring(0, 7)}...${connectedWalletAddress.substring(connectedWalletAddress.length - 5)}`}
+                    </Text>
+                    <Tooltip
+                        className="tooltip"
+                        closeOnClick={false}
+                        gutter={6}
+                        label={
+                            <VStack className="tooltipLabel">
+                                <Text fontWeight={"bold"}>Address copied!</Text>
+                            </VStack>
+                        }
+                        placement={"bottom"}
+                        borderRadius={"full"}
+                        hasArrow={true}
+                        closeDelay={0}
+                        openDelay={0}
+                        isOpen={copied}
+                    >
+                        <Box w={3}>
+                            <FontAwesomeIcon icon={copied ? faCircleCheck : faCopy} />
+                        </Box>
+                    </Tooltip>
+                </HStack>
                 <Tooltip
                     className="tooltip"
                     closeOnClick={false}
-                    gutter={6}
+                    gutter={8}
                     label={
                         <VStack className="tooltipLabel">
-                            <Text fontWeight={"bold"}>Address copied!</Text>
+                            <Text fontWeight={"bold"}>Disconnect wallet</Text>
                         </VStack>
                     }
                     placement={"bottom"}
@@ -68,43 +92,23 @@ export default function CurrentAddressInfo({ setNftId, setIsContractDeployed }) 
                     hasArrow={true}
                     closeDelay={0}
                     openDelay={0}
-                    isOpen={copied}
                 >
-                    <Box w={3}>
-                        <FontAwesomeIcon icon={copied ? faCircleCheck : faCopy} />
-                    </Box>
+                    <Button
+                        variant={"WalletButton"}
+                        aria-label={"Wallet button"}
+                        borderRadius={"full"}
+                        px={0}
+                        h={8}
+                        onClick={() => {
+                            disconnect()
+                            setNftId(null)
+                            setIsContractDeployed(false)
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
+                    </Button>
                 </Tooltip>
             </HStack>
-            <Tooltip
-                className="tooltip"
-                closeOnClick={false}
-                gutter={8}
-                label={
-                    <VStack className="tooltipLabel">
-                        <Text fontWeight={"bold"}>Disconnect wallet</Text>
-                    </VStack>
-                }
-                placement={"bottom"}
-                borderRadius={"full"}
-                hasArrow={true}
-                closeDelay={0}
-                openDelay={0}
-            >
-                <Button
-                    variant={"WalletButton"}
-                    aria-label={"Wallet button"}
-                    borderRadius={"full"}
-                    px={0}
-                    h={8}
-                    onClick={() => {
-                        disconnect()
-                        setNftId(null)
-                        setIsContractDeployed(false)
-                    }}
-                >
-                    <FontAwesomeIcon icon={faRightFromBracket} size={"lg"} />
-                </Button>
-            </Tooltip>
         </HStack>
     )
 }

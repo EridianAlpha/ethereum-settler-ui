@@ -94,7 +94,7 @@ export default function TokenDisplay({ provider, nftId }) {
     }
 
     return (
-        <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"700px"} textAlign={"center"}>
+        <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"500px"} textAlign={"center"}>
             <HStack w={"100%"} justifyContent={{ base: "space-around", sm: "center" }} position={"relative"} flexWrap={"wrap"}>
                 <HStack gap={1}>
                     <Text fontWeight={"bold"}>SETTLER Tokens</Text>
@@ -126,7 +126,7 @@ export default function TokenDisplay({ provider, nftId }) {
                     <Image w={"18px"} src="./images/MetaMaskLogo.png" alt="MetaMask Icon" />
                 </Button>
             </HStack>
-            <Text>Earn 1 SETTLER token per second by holding a SETTLEMENT NFT</Text>
+            <Text>Get 1 SETTLER token per second holding a SETTLEMENT NFT</Text>
         </VStack>
     )
 }
