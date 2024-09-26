@@ -1,8 +1,10 @@
-import { HStack, Text, Image } from "@chakra-ui/react"
+import { HStack, Text, Image, Tooltip, VStack } from "@chakra-ui/react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons"
 
 import config from "../../public/data/config.json"
 
-export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter, setCalculating }) {
+export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter, setCalculating, disabledChains }) {
     const handleClick = (chainId) => {
         setCalculating(true)
 
@@ -15,20 +17,58 @@ export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter
         }
     }
 
-    return (
-        <HStack
-            onClick={() => handleClick(chainId)}
-            cursor="pointer"
-            gap={2}
-            className="bgPage"
-            minW="fit-content"
-            pr={2}
-            py={0}
-            borderRadius={"full"}
-            filter={chainIdFilter.length === 0 ? "null" : chainIdFilter.includes(chainId) ? "null" : "grayscale(100%) brightness(50%)"}
-        >
-            <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} alt="Chain Icon" />
-            <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
-        </HStack>
-    )
+    if (disabledChains.includes(chainId)) {
+        return (
+            <Tooltip
+                className="tooltip"
+                closeOnClick={false}
+                gutter={10}
+                label={
+                    <VStack className="tooltipLabel" fontWeight={"bold"}>
+                        <Text>Error connecting to RPC for {config.chains[chainId].name}</Text>
+                        <Text>{config.chains[chainId].publicJsonRpc}</Text>
+                    </VStack>
+                }
+                placement={"top"}
+                borderRadius={"full"}
+                hasArrow={true}
+                closeDelay={0}
+                openDelay={0}
+            >
+                <HStack
+                    cursor="not-allowed"
+                    gap={2}
+                    className="bgPage"
+                    minW="fit-content"
+                    pr={2}
+                    py={0}
+                    borderRadius={"full"}
+                    filter={"brightness(50%)"}
+                    textColor={"red"}
+                >
+                    <HStack h={"30px"} borderRadius={"full"} justifyContent={"center"} alignItems={"center"} fontSize={"30px"}>
+                        <FontAwesomeIcon icon={faCircleXmark} />
+                    </HStack>
+                    <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
+                </HStack>
+            </Tooltip>
+        )
+    } else {
+        return (
+            <HStack
+                onClick={() => handleClick(chainId)}
+                cursor="pointer"
+                gap={2}
+                className="bgPage"
+                minW="fit-content"
+                pr={2}
+                py={0}
+                borderRadius={"full"}
+                filter={chainIdFilter.length === 0 ? "null" : chainIdFilter.includes(chainId) ? "null" : "grayscale(100%) brightness(50%)"}
+            >
+                <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} alt="Chain Icon" />
+                <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>
+            </HStack>
+        )
+    }
 }

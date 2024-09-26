@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { VStack, Text, HStack, Box, Input, InputGroup, InputRightElement, IconButton, Divider, useBreakpointValue } from "@chakra-ui/react"
+import { VStack, Text, HStack, Box, Input, InputGroup, InputRightElement, IconButton, Divider, useBreakpointValue, Spinner } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { useAccount } from "wagmi"
@@ -32,8 +32,10 @@ export default function SettlementGallery() {
     const [isGalleryExpanded, setIsGalleryExpanded] = useState(true)
     const [processedSettlements, setProcessedSettlements] = useState<ProcessedSettlement[]>([])
     const [calculating, setCalculating] = useState(true)
+    const [fetchingData, setFetchingData] = useState(true)
     const [settlementOwnerFilter, setSettlementOwnerFilter] = useState("")
     const [chainIdFilter, setChainIdFilter] = useState([])
+    const [disabledChains, setDisabledChains] = useState([])
     const [settlements, setSettlements] = useState<ProcessedSettlement[]>([])
 
     // UseEffect - Fetch settlements
@@ -41,6 +43,7 @@ export default function SettlementGallery() {
         const fetchSettlements = async () => {
             const fetchedSettlements: ProcessedSettlement[] = []
 
+            setFetchingData(true)
             for (const chainId in config.chains) {
                 const chain = config.chains[chainId]
                 if (chain.type === "local" && process.env.NEXT_PUBLIC_DEV_MODE_FLAG !== "true") {
@@ -50,25 +53,47 @@ export default function SettlementGallery() {
                     continue
                 }
 
-                const provider = new ethers.JsonRpcProvider(chain.publicJsonRpc)
-                const contract = new ethers.Contract(chain.viewAggregatorContractAddress, viewAggregatorContractAbi, provider)
-
-                const settlements = await contract.getRandomData(10)
-                settlements.forEach((settlement) => {
-                    console.log("settlement.nftId", settlement.nftId)
-                    fetchedSettlements.push({
-                        owner: settlement.owner,
-                        days: settlement.daysSinceMint.toString(),
-                        tokens: Number(new BigNumber(settlement.tokens).shiftedBy(-18)),
-                        chainId: parseInt(chainId),
-                        tokenId: Number(new BigNumber(settlement.nftId)),
+                try {
+                    // Check if the RPC endpoint is reachable
+                    await fetch(chain.publicJsonRpc, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            method: "eth_blockNumber",
+                            params: [],
+                            id: 1,
+                        }),
                     })
-                })
+
+                    const provider = new ethers.JsonRpcProvider(chain.publicJsonRpc)
+                    const contract = new ethers.Contract(chain.viewAggregatorContractAddress, viewAggregatorContractAbi, provider)
+
+                    console.log("Fetching settlements from chain:", chainId)
+
+                    const settlements = await contract.getRandomData(10)
+                    settlements.forEach((settlement) => {
+                        fetchedSettlements.push({
+                            owner: settlement.owner,
+                            days: settlement.daysSinceMint.toString(),
+                            tokens: Number(new BigNumber(settlement.tokens).shiftedBy(-18)),
+                            chainId: parseInt(chainId),
+                            tokenId: Number(new BigNumber(settlement.nftId)),
+                        })
+                    })
+                } catch (error) {
+                    console.error(`Error fetching settlements for ${chainId}: ${error}`)
+
+                    setDisabledChains((prev) => [...prev, chainId])
+                    continue
+                }
             }
             setSettlements(fetchedSettlements)
         }
         fetchSettlements()
-    }, [setSettlements])
+    }, [setSettlements, setDisabledChains])
 
     // UseEffect - Process settlements
     useEffect(() => {
@@ -144,16 +169,20 @@ export default function SettlementGallery() {
                 setProcessedSettlements([...ownerSettlements, ...filteredSettlements])
             }
 
-            setCalculating(false)
+            setFetchingData(false)
         }
 
-        setCalculating(true)
-        processSettlements(settlements)
+        if (settlements.length > 0) {
+            setCalculating(true)
+            processSettlements(settlements)
+        }
     }, [settlements, connectedWalletAddress, settlementOwnerFilter, chainIdFilter])
 
     // UseEffect - Set calculating to false when processedSettlements changes
     useEffect(() => {
-        setCalculating(false)
+        if (processedSettlements.length > 0) {
+            setCalculating(false)
+        }
     }, [processedSettlements])
 
     return (
@@ -225,6 +254,7 @@ export default function SettlementGallery() {
                                         chainIdFilter={chainIdFilter}
                                         setChainIdFilter={setChainIdFilter}
                                         setCalculating={setCalculating}
+                                        disabledChains={disabledChains}
                                     />
                                 ))}
                         </HStack>
@@ -272,8 +302,14 @@ export default function SettlementGallery() {
                 </HStack>
                 <Divider w={"100%"} borderWidth={"1px"} />
                 <Box w={"100%"} py={3}>
+                    {fetchingData && (
+                        <VStack>
+                            <Spinner />
+                            <Text>Loading settlements...</Text>
+                        </VStack>
+                    )}
                     {processedSettlements.length === 1 && <SettlementCard index={0} data={processedSettlements[0]} />}
-                    {processedSettlements.length > 1 && !calculating && (
+                    {processedSettlements.length > 1 && !calculating && !fetchingData && (
                         <>
                             {isMasonry ? (
                                 <Masonry items={processedSettlements} render={SettlementCard} columnWidth={450} rowGutter={20} columnGutter={10} />
@@ -286,7 +322,7 @@ export default function SettlementGallery() {
                             )}
                         </>
                     )}
-                    {processedSettlements.length === 0 && (
+                    {!fetchingData && processedSettlements.length === 0 && (
                         <HStack justifyContent={"center"} w={"100%"} gap={5} flexWrap={"wrap"}>
                             <HStack gap={{ base: 3, sm: 6 }} flexWrap={"wrap"} justifyContent={"center"} w={{ base: "100%", xl: "fit-content" }}>
                                 <Text>{getRandomTreeEmoji()}</Text>
