@@ -45,7 +45,7 @@ export default function SettlementCard({ index, data: settlement }) {
                     pb={{ base: 3, sm: 0 }}
                     border={connectedWalletAddress === settlement.owner ? "6px solid gold" : "none"}
                 >
-                    <Box position="relative" maxW={"125px"} minW={"125px"}>
+                    <Box position="relative" maxW={{ base: "200px", sm: "125px" }} minW={{ base: "200px", sm: "125px" }}>
                         <Image src={config.localNftImage} alt="Settlement NFT Image" w="100%" borderRadius={{ base: "20px", sm: "0px" }} />
                         <Box
                             position="absolute"
@@ -65,9 +65,9 @@ export default function SettlementCard({ index, data: settlement }) {
                         </Box>
                     </Box>
                     <VStack w={"100%"} gap={2} alignItems={{ base: "center", sm: "start" }} pl={{ base: 0, sm: 1 }}>
-                        <HStack mt={"-12px"} justifyContent={{ base: "center", sm: "space-between" }} w={"100%"} fontWeight={"semibold"}>
+                        <HStack mt={"-12px"} justifyContent={{ base: "space-around", sm: "space-between" }} w={"100%"} fontWeight={"semibold"}>
                             <HStack>
-                                <Image h={"30px"} borderRadius={"full"} src={config.chains[settlement.chainId].iconUrl} alt="Chain Icon" />
+                                <Image h={"40px"} borderRadius={"full"} src={config.chains[settlement.chainId].iconUrl} alt="Chain Icon" />
                                 <Text>{config.chains[settlement.chainId]?.name}</Text>
                             </HStack>
                             <HStack>

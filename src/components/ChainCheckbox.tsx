@@ -67,7 +67,7 @@ export default function ChainCheckbox({ chainId, setChainIdFilter, chainIdFilter
                 pr={2}
                 py={0}
                 borderRadius={"full"}
-                filter={chainIdFilter.length === 0 ? "null" : chainIdFilter.includes(chainId) ? "null" : "grayscale(100%) brightness(50%)"}
+                border={chainIdFilter.includes(chainId) ? "3px solid gold" : "3px solid transparent"}
             >
                 <Image h={"30px"} borderRadius={"full"} src={config.chains[chainId].iconUrl} alt="Chain Icon" />
                 <Text fontSize={"xl"}>{config.chains[chainId].name}</Text>

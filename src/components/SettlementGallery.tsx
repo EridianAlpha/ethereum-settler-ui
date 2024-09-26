@@ -270,7 +270,7 @@ export default function SettlementGallery() {
                                     p={3}
                                     pr={10}
                                     w={"100%"}
-                                    minW={{ sm: "100px", md: "460px" }}
+                                    minW={{ sm: "100px", md: "470px" }}
                                     borderRadius={"20px"}
                                     fontFamily={"monospace"}
                                     value={settlementOwnerFilter}
@@ -278,7 +278,7 @@ export default function SettlementGallery() {
                                         setCalculating(true)
                                         setSettlementOwnerFilter(event.target.value)
                                     }}
-                                    border={"none"}
+                                    border={settlementOwnerFilter ? "3px solid gold" : "3px solid transparent"}
                                     variant={"AddressInput"}
                                 />
                                 {settlementOwnerFilter && (
