@@ -9,7 +9,8 @@
             "publicJsonRpc": "https://ethereum-holesky-rpc.publicnode.com",
             "blockExplorerUrl": "https://holesky.etherscan.io",
             "nftContractAddress": "0xdEFc4a90b08538a2B1eb832B570EC2F751bc3B31",
-            "tokenContractAddress": "0x94CF82A43Cb63297001F49A801C77814De49A92A"
+            "tokenContractAddress": "0x94CF82A43Cb63297001F49A801C77814De49A92A",
+            "viewAggregatorContractAddress": "0x5672b462948F8e0fd2b75d496c196027df3250eA"
         },
         "8453": {
             "type": "mainnet",
@@ -18,7 +19,8 @@
             "publicJsonRpc": "https://base-rpc.publicnode.com",
             "blockExplorerUrl": "https://basescan.org",
             "nftContractAddress": "0xdd1DEed37d66cA457d5B8fb59C7967959443888C",
-            "tokenContractAddress": "0x1d95a36Cf66A158094446103fAB3087C1e105C08"
+            "tokenContractAddress": "0x1d95a36Cf66A158094446103fAB3087C1e105C08",
+            "viewAggregatorContractAddress": "0x846734Ee669A61d9f6708E4A442b11656e5d45Fe"
         },
         "84532": {
             "type": "testnet",
@@ -27,7 +29,8 @@
             "publicJsonRpc": "https://base-sepolia-rpc.publicnode.com",
             "blockExplorerUrl": "https://sepolia.basescan.org",
             "nftContractAddress": "0x3bd1f3caC1e62412aA089C134B2d9FdA02A80305",
-            "tokenContractAddress": "0x3DA7D9628557D59980342581B7CC24A65Ef0568C"
+            "tokenContractAddress": "0x3DA7D9628557D59980342581B7CC24A65Ef0568C",
+            "viewAggregatorContractAddress": "0xe5e279d9A408560BFc570C81673327e3e4948092"
         },
         "31337": {
             "type": "local",
@@ -36,7 +39,8 @@
             "publicJsonRpc": "http://localhost:8545",
             "blockExplorerUrl": "http://localhost",
             "nftContractAddress": "0x0000000000000000000000000000000000000000",
-            "tokenContractAddress": "0x0000000000000000000000000000000000000000"
+            "tokenContractAddress": "0x0000000000000000000000000000000000000000",
+            "viewAggregatorContractAddress": "0x0000000000000000000000000000000000000000"
         }
     }
 }
