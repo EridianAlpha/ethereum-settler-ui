@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { VStack, Text, HStack, Box, Input, InputGroup, InputRightElement, IconButton, Divider } from "@chakra-ui/react"
+import { VStack, Text, HStack, Box, Input, InputGroup, InputRightElement, IconButton, Divider, useBreakpointValue } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { useAccount } from "wagmi"
@@ -22,6 +22,7 @@ type ProcessedSettlement = Settlement | Tree
 
 export default function SettlementGallery() {
     const { address: connectedWalletAddress } = useAccount()
+    const isMasonry = useBreakpointValue({ base: false, sm: true })
 
     const [isGalleryExpanded, setIsGalleryExpanded] = useState(true)
     const [processedSettlements, setProcessedSettlements] = useState<ProcessedSettlement[]>([])
@@ -41,7 +42,7 @@ export default function SettlementGallery() {
             days: "52",
             tokens: 654321,
             chainId: 8453,
-            tokenId: 2,
+            tokenId: 9999,
         },
         {
             owner: "0xF83ff8092c91503cd468aBb2DEb115a91fE83c99",
@@ -249,7 +250,7 @@ export default function SettlementGallery() {
     }, [processedSettlements])
 
     return (
-        <VStack id="gallery" borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={0} mb={isGalleryExpanded ? 0 : "60vh"}>
+        <VStack id="gallery" borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={0} mb={isGalleryExpanded ? 0 : { base: "20vh", sm: "50vh" }}>
             <HStack
                 border={"4px solid green"}
                 borderBottom={isGalleryExpanded ? "none" : "4px solid green"}
@@ -366,7 +367,17 @@ export default function SettlementGallery() {
                 <Box w={"100%"} py={3} minH={"60vh"}>
                     {processedSettlements.length === 1 && <SettlementCard index={0} data={processedSettlements[0]} />}
                     {processedSettlements.length > 1 && !calculating && (
-                        <Masonry items={processedSettlements} render={SettlementCard} columnWidth={450} rowGutter={20} columnGutter={10} />
+                        <>
+                            {isMasonry ? (
+                                <Masonry items={processedSettlements} render={SettlementCard} columnWidth={450} rowGutter={20} columnGutter={10} />
+                            ) : (
+                                <VStack gap={3}>
+                                    {processedSettlements.map((settlement, index) => (
+                                        <SettlementCard key={index} index={index} data={settlement} />
+                                    ))}
+                                </VStack>
+                            )}
+                        </>
                     )}
                 </Box>
             </VStack>

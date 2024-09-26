@@ -10,7 +10,7 @@ import config from "../../public/data/config.json"
 export default function SettlementCard({ index, data: settlement }) {
     const { address: connectedWalletAddress } = useAccount()
 
-    const treeEmojis = ["🌲", "🌳", "⛰️", "🏕️"]
+    const treeEmojis = ["🌲", "🌳", "⛰️", "🏕️", "🪵", "☀️"]
     const getRandomTreeCount = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
@@ -21,7 +21,7 @@ export default function SettlementCard({ index, data: settlement }) {
 
     if (settlement.trees) {
         return (
-            <VStack key={index} h="100%" gap={5}>
+            <VStack key={index} h="100%" gap={5} w={"100%"}>
                 <HStack justifyContent="space-between" w="100%">
                     {Array.from({ length: getRandomTreeCount(6, 9) }).map((_, treeIndex) => (
                         <Text key={treeIndex}>{getRandomTreeEmoji()}</Text>
