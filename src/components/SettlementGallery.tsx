@@ -26,7 +26,7 @@ type Settlement = {
 type Tree = { trees: true }
 type ProcessedSettlement = Settlement | Tree
 
-export default function SettlementGallery() {
+export default function SettlementGallery({ isMintTransactionConfirmed }) {
     const { address: connectedWalletAddress } = useAccount()
     const isMasonry = useBreakpointValue({ base: false, sm: true })
 
@@ -120,7 +120,14 @@ export default function SettlementGallery() {
             setSettlements(fetchedSettlements)
         }
         fetchSettlements()
-    }, [setSettlements, setDisabledChains, setSettlementChainTotals, connectedWalletAddress])
+    }, [setSettlements, setDisabledChains, setSettlementChainTotals, connectedWalletAddress, isMintTransactionConfirmed])
+
+    // UseEffect - Reset disabled chains when mint transaction is confirmed
+    useEffect(() => {
+        if (isMintTransactionConfirmed) {
+            setDisabledChains([])
+        }
+    }, [isMintTransactionConfirmed, setDisabledChains])
 
     // UseEffect - Process settlements
     useEffect(() => {

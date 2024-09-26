@@ -66,7 +66,7 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
             )}
             <VStack gap={10} pt={5} w={"100%"}>
                 <About />
-                <SettlementGallery />
+                <SettlementGallery isMintTransactionConfirmed={isMintTransactionConfirmed} />
             </VStack>
         </VStack>
     )
