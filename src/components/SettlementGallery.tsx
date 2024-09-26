@@ -223,6 +223,14 @@ export default function SettlementGallery() {
                 for (let i = 0; i < 5; i++) {
                     shuffledRemaining.push({ trees: true })
                 }
+
+                // Remove trees from the start so it always starts with a settlement
+                if (ownerSettlements.length === 0) {
+                    while (shuffledRemaining[0].trees) {
+                        shuffledRemaining.shift()
+                    }
+                }
+
                 setProcessedSettlements([...ownerSettlements, ...shuffledRemaining])
             } else {
                 setProcessedSettlements([...ownerSettlements, ...filteredSettlements])
