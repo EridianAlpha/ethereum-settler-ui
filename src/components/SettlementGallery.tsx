@@ -341,7 +341,7 @@ export default function SettlementGallery({ isMintTransactionConfirmed }) {
                     </HStack>
                 </HStack>
                 <Divider w={"100%"} borderWidth={"1px"} />
-                <Box w={"100%"} py={3}>
+                <Box w={"100%"} py={3} minH={{ base: "20vh", sm: "60vh" }}>
                     {fetchingData && (
                         <VStack>
                             <Spinner />
