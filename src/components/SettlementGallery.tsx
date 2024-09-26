@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
-import { VStack, Text, HStack, Box, Input, InputGroup, InputRightElement, IconButton } from "@chakra-ui/react"
+import { VStack, Text, HStack, Box, Input, InputGroup, InputRightElement, IconButton, Divider } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faXmark } from "@fortawesome/free-solid-svg-icons"
-
+import { faXmark, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { useAccount } from "wagmi"
 import { Masonry } from "masonic"
 
@@ -24,6 +23,7 @@ type ProcessedSettlement = Settlement | Tree
 export default function SettlementGallery() {
     const { address: connectedWalletAddress } = useAccount()
 
+    const [isGalleryExpanded, setIsGalleryExpanded] = useState(true)
     const [processedSettlements, setProcessedSettlements] = useState<ProcessedSettlement[]>([])
     const [calculating, setCalculating] = useState(true)
     const [settlementOwnerFilter, setSettlementOwnerFilter] = useState("")
@@ -241,12 +241,57 @@ export default function SettlementGallery() {
     }, [processedSettlements])
 
     return (
-        <VStack id="settlements" className={"contentContainer"} borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={5} px={2}>
-            <VStack justifyContent={"center"} w={"100%"} py={3} px={5} borderRadius={"20px"} flexWrap={"wrap"} gap={6}>
-                <Text fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"}>
+        <VStack id="gallery" borderRadius={"20px"} w={"100%"} textAlign={"justify"} gap={0} mb={isGalleryExpanded ? 0 : "60vh"}>
+            <HStack
+                border={"4px solid green"}
+                borderBottom={isGalleryExpanded ? "none" : "4px solid green"}
+                justifyContent={"space-between"}
+                w={"100%"}
+                maxW={"500px"}
+                cursor={"pointer"}
+                onClick={() => setIsGalleryExpanded(!isGalleryExpanded)}
+                className={"bgContent"}
+                px={5}
+                py={3}
+                mb={"-4px"}
+                borderTopRadius={"20px"}
+                borderBottomRadius={isGalleryExpanded ? "0px" : "20px"}
+                zIndex={2}
+            >
+                <Box
+                    boxSize={6}
+                    as={FontAwesomeIcon}
+                    icon={faChevronRight}
+                    transition="all 0.2s"
+                    transform={`rotate(${isGalleryExpanded ? 45 : 0}deg)`}
+                    borderRadius={"full"}
+                />
+                <Text fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"} textAlign={"center"}>
                     Settlements Gallery
                 </Text>
-                <HStack flexWrap={"wrap"} gap={10} justifyContent={"center"}>
+                <Box
+                    boxSize={6}
+                    as={FontAwesomeIcon}
+                    icon={faChevronRight}
+                    transition="all 0.2s"
+                    transform={`rotate(${isGalleryExpanded ? 135 : 180}deg)`}
+                    borderRadius={"full"}
+                />
+            </HStack>
+            <VStack
+                className={"contentContainer"}
+                justifyContent={"center"}
+                w={"100%"}
+                pt={6}
+                pb={3}
+                px={5}
+                borderRadius={"20px"}
+                borderTopRadius={{ base: "0px", md: "20px" }}
+                flexWrap={"wrap"}
+                gap={5}
+                hidden={!isGalleryExpanded ? true : false}
+            >
+                <HStack flexWrap={"wrap"} gap={5} justifyContent={"space-around"} w={"100%"}>
                     <HStack flexWrap={"wrap"} justifyContent={"center"} gap={5}>
                         <Text fontSize={"lg"} fontWeight={"bold"}>
                             Filter by chain
@@ -279,7 +324,7 @@ export default function SettlementGallery() {
                                     p={3}
                                     pr={10}
                                     w={"100%"}
-                                    minW={{ base: "100px", sm: "460px" }}
+                                    minW={{ sm: "100px", md: "460px" }}
                                     borderRadius={"20px"}
                                     fontFamily={"monospace"}
                                     value={settlementOwnerFilter}
@@ -309,13 +354,14 @@ export default function SettlementGallery() {
                         </HStack>
                     </HStack>
                 </HStack>
+                <Divider w={"100%"} borderWidth={"1px"} />
+                <Box w={"100%"} py={3} minH={"60vh"}>
+                    {processedSettlements.length === 1 && <SettlementCard index={0} data={processedSettlements[0]} />}
+                    {processedSettlements.length > 1 && !calculating && (
+                        <Masonry items={processedSettlements} render={SettlementCard} columnWidth={450} rowGutter={20} columnGutter={10} />
+                    )}
+                </Box>
             </VStack>
-            <Box w={"100%"} py={3} minH={"60vh"}>
-                {processedSettlements.length === 1 && <SettlementCard index={0} data={processedSettlements[0]} />}
-                {processedSettlements.length > 1 && !calculating && (
-                    <Masonry items={processedSettlements} render={SettlementCard} columnWidth={450} rowGutter={20} columnGutter={10} />
-                )}
-            </Box>
         </VStack>
     )
 }

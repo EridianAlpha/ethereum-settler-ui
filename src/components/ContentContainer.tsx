@@ -64,8 +64,10 @@ export default function ContentContainer({ wagmiProviderConfig, customRpc, setCu
                     <TokenDisplay provider={provider} nftId={nftId} />
                 </>
             )}
-            <About />
-            <SettlementGallery />
+            <VStack gap={10} pt={5} w={"100%"}>
+                <About />
+                <SettlementGallery />
+            </VStack>
         </VStack>
     )
 }

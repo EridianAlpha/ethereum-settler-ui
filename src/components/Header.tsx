@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
-import { faSun, faMoon, faBars, faSatelliteDish, faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import { faSun, faMoon, faBars, faSatelliteDish, faCircleInfo, faImages } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
 
 function HeaderButtons({ displayZone, buttonLabels, useCustomRpc, setUseCustomRpc }) {
@@ -51,6 +51,14 @@ function HeaderButtons({ displayZone, buttonLabels, useCustomRpc, setUseCustomRp
                     Links
                 </Text>
             )}
+            <Link href={"#gallery"}>
+                <Button variant={"HeaderButton"} aria-label={"View Gallery Section"} borderRadius={"full"} p={2}>
+                    <HStack gap={3}>
+                        <FontAwesomeIcon icon={faImages} size={"xl"} />
+                        {buttonLabels && <Text pr={1}>Gallery</Text>}
+                    </HStack>
+                </Button>
+            </Link>
             <Link href={"#about"}>
                 <Button variant={"HeaderButton"} aria-label={"View About Section"} borderRadius={"full"} p={2}>
                     <HStack gap={3}>
@@ -59,6 +67,7 @@ function HeaderButtons({ displayZone, buttonLabels, useCustomRpc, setUseCustomRp
                     </HStack>
                 </Button>
             </Link>
+            {displayZone == "header" && <Box borderLeftWidth={1} className={"borderColorDivider"} height={8} />}
             <Link href={"https://github.com/EridianAlpha/ethereum-settler-ui"} target="_blank">
                 <Button variant={"HeaderButton"} aria-label={"View GitHub Source"} borderRadius={"full"} p={2}>
                     <HStack gap={3}>
