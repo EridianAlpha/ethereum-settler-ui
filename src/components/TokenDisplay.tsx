@@ -108,7 +108,7 @@ export default function TokenDisplay({ provider, nftId }) {
                         py={1}
                         borderRadius={20}
                     >
-                        {tokenBalance.toFixed(2)}
+                        {tokenBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </Text>
                 </HStack>
                 <Button

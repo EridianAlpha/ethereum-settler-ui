@@ -89,7 +89,7 @@ export default function SettlementCard({ index, data: settlement }) {
                                 py={1}
                                 borderRadius={20}
                             >
-                                {settlement.tokens}
+                                {settlement.tokens.toLocaleString()}
                             </Text>
                         </HStack>
                         <HStack>
