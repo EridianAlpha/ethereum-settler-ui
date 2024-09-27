@@ -74,7 +74,9 @@ export default function SettlementCard({ index, data: settlement }) {
                                 <Text fontSize={"4xl"} mb={"8px"}>
                                     🏕️
                                 </Text>
-                                <Text>{settlement.days} days</Text>
+                                <Text>
+                                    {settlement.days} {Number(settlement.days) === 1 ? "day" : "days"}
+                                </Text>
                             </HStack>
                         </HStack>
                         <HStack mt={"-15px"}>
