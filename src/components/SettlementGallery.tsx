@@ -247,7 +247,7 @@ export default function SettlementGallery({ isMintTransactionConfirmed }) {
                 />
                 <HStack fontSize={"lg"} fontWeight={"bold"} className={"bgPage"} px={3} py={1} borderRadius={"full"} textAlign={"center"} gap={3}>
                     <Text>Settlements Gallery</Text>
-                    {isGalleryExpanded && settlementChainTotals && !fetchingData && (
+                    {settlementChainTotals && !fetchingData && (
                         <Text borderLeft={"2px solid"} pl={2}>
                             {Object.values(settlementChainTotals).reduce((acc: number, value: number) => acc + value, 0) as number}
                         </Text>
