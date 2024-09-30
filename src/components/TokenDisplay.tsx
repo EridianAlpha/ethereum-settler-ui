@@ -96,7 +96,7 @@ export default function TokenDisplay({ provider, nftId }) {
     return (
         <VStack className={"tokenBalanceContainer"} px={5} py={2} borderRadius={"20px"} maxW={"500px"} textAlign={"center"}>
             <HStack w={"100%"} justifyContent={{ base: "space-around", sm: "center" }} position={"relative"} flexWrap={"wrap"}>
-                <HStack gap={1}>
+                <HStack gap={1} mr={!isMobile && tokenBalance > 1e6 ? "50px" : "0px"}>
                     <Text fontWeight={"bold"}>SETTLER Tokens</Text>
                     <Text
                         fontWeight={"bold"}
