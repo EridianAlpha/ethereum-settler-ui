@@ -22,7 +22,7 @@ export default function TokenDisplay({ provider, nftId }) {
             const abi = ["function balanceOf(address account) view returns (uint256)", "function TOKEN_EMISSION_RATE() view returns (uint256)"]
             const contract = new ethers.Contract(config.chains[chainId].tokenContractAddress, abi, provider)
 
-            // If the nftId is 0 or null, the connectedWalletAddress does not have an NFT, so return early
+            // If the nftId is 0 or null, the connectedWalletAddress does not have an NFT, so return early and reset tokenBalance
             if (!nftId) {
                 setTokenBalance(0)
                 return
@@ -38,24 +38,23 @@ export default function TokenDisplay({ provider, nftId }) {
                 }
 
                 const formattedBalance = Number(new BigNumber(balance).shiftedBy(-18))
-
                 const tokenEmissionRate = await contract.TOKEN_EMISSION_RATE()
                 const formattedTokenEmissionRate = Number(new BigNumber(tokenEmissionRate).shiftedBy(-18))
 
                 setTokenBalance(formattedBalance)
+                lastUpdateTime = Date.now() // Reset time
 
-                // Start the interval (20ms) after fetching the initial balance
-                intervalId = setInterval(() => {
-                    const now = Date.now()
-                    const elapsedSeconds = (now - lastUpdateTime) / 1000
-                    lastUpdateTime = now
+                // Start the interval only if there is a valid balance and nftId
+                if (formattedBalance > 0) {
+                    intervalId = setInterval(() => {
+                        const now = Date.now()
+                        const elapsedSeconds = (now - lastUpdateTime) / 1000
+                        lastUpdateTime = now
 
-                    // If an nftId exists increment the token balance by 1/50th of the token emission rate
-                    // so the token balance increases by the formattedTokenEmissionRate every second
-                    if (nftId) {
+                        // Increment the token balance based on the elapsed time
                         setTokenBalance((prevBalance) => prevBalance + formattedTokenEmissionRate * elapsedSeconds)
-                    }
-                }, 20)
+                    }, 20)
+                }
             } catch (error) {
                 console.error("Error fetching token balance:", error)
             }
@@ -63,8 +62,11 @@ export default function TokenDisplay({ provider, nftId }) {
 
         fetchTokenBalance()
 
-        // Cleanup the interval on component unmount
-        return () => clearInterval(intervalId)
+        // Clear the interval and reset balance when switching wallets or on unmount
+        return () => {
+            clearInterval(intervalId)
+            setTokenBalance(0) // Reset token balance when the component is cleaned up
+        }
     }, [provider, connectedWalletAddress, nftId, chainId])
 
     const addTokenToMetaMask = async () => {
